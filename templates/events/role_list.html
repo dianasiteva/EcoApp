@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Roles{% endblock %}
+
+{% block content %}
+<h1>Роли на участниците</h1>
+
+<ul class="list-group">
+    {% for role in roles %}
+        <li class="list-group-item">
+            <a href="{% url 'role_detail' event.pk %}">
+                {{ role.title }}
+            </a>
+        </li>
+    {% empty %}
+        <li class="list-group-item">Няма роли.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

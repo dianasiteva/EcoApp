@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Participant Details{% endblock %}
+
+{% block content %}
+<h2>{{ participant.first_name }} {{ participant.last_name }}</h2>
+
+<p><strong>Email:</strong> {{ participant.email }}</p>
+
+{% if participant.phone %}
+<p><strong>Phone:</strong> {{ participant.phone }}</p>
+{% endif %}
+
+<a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Edit</a>
+<a href="{% url 'participant_delete' participant.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}

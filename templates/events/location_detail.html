@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Location Details{% endblock %}
+
+{% block content %}
+<h2>{{ location.name }}</h2>
+<p><strong>Address:</strong> {{ location.address }}</p>
+<p>{{ location.description }}</p>
+
+<a href="{% url 'location_edit' location.pk %}" class="btn btn-primary">Edit</a>
+<a href="{% url 'location_delete' location.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}

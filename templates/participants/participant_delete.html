@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Delete Partisipant{% endblock %}
+
+{% block content %}
+<h2>Are you sure you want to delete "{{ participant.first_name }}" "{{ participant.last_name }}"?</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Yes, delete</button>
+    <a href="{% url 'participant_detail' participant.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

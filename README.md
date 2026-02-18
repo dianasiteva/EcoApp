@@ -549,8 +549,8 @@ brew install postgresql
 
 ## 👥 Contact & Support
 
-**Project Maintainer**: [Your Name]
-**Email**: [your-email@example.com]
+**Project Maintainer**: [Diana Siteva]
+**Email**: [dianasiteva@gmail.com]
 **Issues**: Please report bugs and feature requests in the GitHub issues section
 
 ---

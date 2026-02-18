@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Participants{% endblock %}
+
+{% block content %}
+<h1>Participants</h1>
+
+<a href="{% url 'participant_create' %}" class="btn btn-success mb-3">Add Participant</a>
+
+<ul class="list-group">
+    {% for participant in participants %}
+        <li class="list-group-item">
+            <a href="{% url 'participant_detail' participant.pk %}">
+                {{ participant.name }}
+            </a>
+        </li>
+    {% empty %}
+        <li class="list-group-item">No participants yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
