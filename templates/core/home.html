@@ -1,21 +1,93 @@
+{#{% extends 'base.html' %}#}
+{#{% block title %}EcoApp — Clean Roads{% endblock %}#}
+
+{#{% block content %}#}
+{#<div class="text-center">#}
+{#    <h1 class="mb-4">ПЛАТФОРМА ЗА ДОБРОВОРЕН ТРУД ЗА ПОЧИСТВАНЕ НА ПЪТИЩАТА НА БЪЛГАРИЯ</h1>#}
+{##}
+{#    <p class="lead">#}
+{#        Добре дошли в EcoApp - вашата платформа за доброволен труд за чиста България! Нашата мисия е да обединим хората, които искат да допринесат за по-чиста и по-зелена околна среда, като организираме събития за почистване на пътищата в цялата страна.#}
+{#    </p>#}
+{#    <p class="fancy">#}
+{#        Пътуваме по българските пътища и виждаме толкова пластмаса, гуми, найлонови торбички, осеяни покрай канавките и по отбивките Те се виждат особено в края на зимата преди да се появи зеленината. Нека се обединим за чиста България и да направим нашите пътища по-красиви и по-безопасни за всички!#}
+{#    </p>#}
+{##}
+{#    <div class="mt-4">#}
+{#        <a href="/events/" class="btn btn-success btn-lg m-2">Събития</a>#}
+{#        <a href="/events/locations/" class="btn btn-outline-success btn-lg m-2">Локации</a>#}
+{#        <a href="/participants/" class="btn btn-outline-primary btn-lg m-2">Доброволци</a>#}
+{#    </div>#}
+```html
 {% extends 'base.html' %}
 {% block title %}EcoApp — Clean Roads{% endblock %}
-
+{% load static %}
 {% block content %}
-<div class="text-center">
-    <h1 class="mb-4">ПЛАТФОРМА ЗА ДОБРОВОРЕН ТРУД ЗА ПОЧИСТВАНЕ НА ПЪТИЩАТА НА БЪЛГАРИЯ</h1>
+<section class="hero-section text-white text-center d-flex align-items-center">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-4">
+            ПЛАТФОРМА ЗА ДОБРОВОЛЕН ТРУД ЗА ПОЧИСТВАНЕ НА ПЪТИЩАТА НА БЪЛГАРИЯ
+        </h1>
 
-    <p class="green lead">
-        Добре дошли в EcoApp - вашата платформа за доброволен труд за чиста България! Нашата мисия е да обединим хората, които искат да допринесат за по-чиста и по-зелена околна среда, като организираме събития за почистване на пътищата в цялата страна.
-    </p>
-    <p class="fancy">
-        Пътуваме по българските пътища и виждаме толкова пластмаса, гуми, найлонови торбички, осеяни покрай канавките и по отбивките Те се виждат особено в края на зимата преди да се появи зеленината. Нека се обединим за чиста България и да направим нашите пътища по-красиви и по-безопасни за всички!
-    </p>
+        <p class="lead mb-4">
+            Обединяваме хората, които искат да допринесат за по-чиста и по-зелена България.
+            Включи се в събития за почистване и бъди част от решението с добрия пример.
+        </p>
 
-    <div class="mt-4">
-        <a href="/events/" class="btn btn-success btn-lg m-2">Събития</a>
-        <a href="/events/locations/" class="btn btn-outline-success btn-lg m-2">Локации</a>
-        <a href="/participants/" class="btn btn-outline-primary btn-lg m-2">Доброволци</a>
+        <p class="fancy mb-5">
+            Всеки ден виждаме пластмаса, гуми и отпадъци край пътищата.
+            Нека заедно направим България по-красива и безопасна!
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/events/" class="btn btn-success btn-lg px-4">
+                🌿 Събития
+            </a>
+            <a href="/events/locations/" class="btn btn-outline-light btn-lg px-4">
+                📍 Локации
+            </a>
+{#            <a href="/participants/" class="btn btn-outline-primary btn-lg px-4">#}
+{#                👥 Доброволци#}
+{#            </a>#}
+            <a href="/participants/" class="btn btn-lg px-4 btn-volunteers">
+                👥 Доброволци
+            </a>
+
+        </div>
     </div>
-</div>
+</section>
+
+<style>
+
+.hero-section {
+    min-height: 70vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+        url("{% static 'images/hero-road.jpg' %}") center/cover no-repeat;
+    border-radius: 16px;
+}
+
+.fancy {
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.95;
+}
+
+.btn-volunteers {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #fff;
+}
+
+.btn-volunteers:hover {
+    background-color: #5a35a0;
+    border-color: #5a35a0;
+    color: #fff;
+}
+
+
+</style>
 {% endblock %}
+```
+{#</div>#}
+{#{% endblock %}#}

@@ -10,6 +10,20 @@
 <p><strong>Phone:</strong> {{ participant.phone }}</p>
 {% endif %}
 
-<a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Edit</a>
-<a href="{% url 'participant_delete' participant.pk %}" class="btn btn-danger">Delete</a>
+<a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Корекция</a>
+<a href="{% url 'participant_delete' participant.pk %}" class="btn btn-danger">Изтриване</a>
+
+
+
+<h3 class="mt-4">Събития</h3>
+
+<ul class="list-group">
+    {% for per in participant.participanteventrole_set.all %}
+        <li class="list-group-item">
+            {{ per.event.title }} — <strong>{{ per.role.name }}</strong>— { per.role.description }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">Не е включен към събитие.</li>
+    {% endfor %}
+</ul>
 {% endblock %}

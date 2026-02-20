@@ -1,5 +1,5 @@
 from django import forms
-from .models import Participant
+from .models import Participant, ParticipantEventRole
 
 
 class ParticipantForm(forms.ModelForm):
@@ -15,15 +15,39 @@ class ParticipantForm(forms.ModelForm):
         }
 
         labels = {
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
-            'email': 'Email Address',
-            'phone': 'Phone Number',
+            'first_name': 'Име',
+            'last_name': 'Фамилия',
+            'email': 'Електронна поща',
+            'phone': 'Телефонен номер',
         }
 
         error_messages = {
             'email': {
-                'invalid': 'Please enter a valid email address.',
+                'invalid': 'Невалиден адрес на електронна поща.',
             }
         }
+
+
+
+
+class ParticipantEventRoleForm(forms.ModelForm):
+    class Meta:
+        model = ParticipantEventRole
+        fields = ['participant', 'role']
+
+        labels = {
+                     'participant': 'Доброволец',
+                     'role': 'Роля',}
+
+
+    def __init__(self, *args, event=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.event = event
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.event = self.event
+        if commit:
+            instance.save()
+        return instance
 

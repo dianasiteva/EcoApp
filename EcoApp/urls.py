@@ -24,3 +24,4 @@ urlpatterns = [
     path('participants/', include('participants.urls')),
 ]
 
+handler404 = 'core.views.custom_404'

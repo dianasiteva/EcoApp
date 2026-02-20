@@ -19,6 +19,6 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'description')
     search_fields = ('name',)
     ordering = ('name',)

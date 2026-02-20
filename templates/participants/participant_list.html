@@ -2,19 +2,19 @@
 {% block title %}Participants{% endblock %}
 
 {% block content %}
-<h1>Participants</h1>
+<h1>Доброволци</h1>
 
-<a href="{% url 'participant_create' %}" class="btn btn-success mb-3">Add Participant</a>
+<a href="{% url 'participant_create' %}" class="btn btn-success mb-3">Запиши се за доброволец</a>
 
 <ul class="list-group">
     {% for participant in participants %}
         <li class="list-group-item">
             <a href="{% url 'participant_detail' participant.pk %}">
-                {{ participant.name }}
+                {{ participant.first_name }} {{ participant.last_name }}
             </a>
         </li>
     {% empty %}
-        <li class="list-group-item">No participants yet.</li>
+        <li class="list-group-item">Бъди пръв!</li>
     {% endfor %}
 </ul>
 {% endblock %}

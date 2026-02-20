@@ -7,22 +7,24 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'date', 'location', 'description']
 
+
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Event title'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Наименование'}),
             'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            # 'date': forms.DateInput(format='%d.%m.%Y',attrs={'class': 'form-control','placeholder': 'дд.мм.гггг'}),
             'location': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
         labels = {
-            'title': 'Event Title',
-            'date': 'Event Date',
-            'location': 'Location',
-            'description': 'Description',
+            'title': 'Наименование на събитието',
+            'date': 'Дата на събитието',
+            'location': 'Локация',
+            'description': 'Разяснения',
         }
 
         help_texts = {
-            'title': 'Enter a short and clear event name.',
+            'title': 'Въведи кратко и дотатъчно описващо наименование.',
         }
 
         error_messages = {
@@ -48,29 +50,10 @@ class LocationForm(forms.ModelForm):
         }
 
         labels = {
-            'name': 'Location Name',
-            'address': 'Address',
-            'description': 'Description',
+            'name': 'Наименование',
+            'address': 'Адрес',
+            'description': 'Описание',
         }
 
 
 
-class RoleForm(forms.ModelForm):
-    class Meta:
-        model = Role
-        fields = ['name', 'description']
-
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        }
-
-        labels = {
-            'name': 'Role Name',
-            'description': 'Description',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['name'].disabled = True

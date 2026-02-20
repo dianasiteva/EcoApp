@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Assign Participant{% endblock %}
+
+{% block content %}
+<h2>Включване на доброволец към събитие: <span class="text-success">{{ event.title }}</span></h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+<h6 class="mt-4">Каква роля ще изпълнява доброволецът?</h6> 
+    <ul class="list-group mb-3"> 
+        {% for role in roles %} 
+            <li class="list-group-item"> 
+                <strong>{{ role.name }}</strong>
+                <br> <small class="text-muted">{{ role.description }}</small>
+            </li> {% endfor %} </ul>
+        <button class="btn btn-success">Включи</button>
+</form>
+    
+{% endblock %}

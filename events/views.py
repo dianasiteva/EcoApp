@@ -4,8 +4,37 @@ from .forms import EventForm, LocationForm
 
 
 def event_list(request):
-    events = Event.objects.all().order_by('-date')
-    return render(request, 'events/event_list.html', {'events': events})
+    events = Event.objects.all()
+    locations = Location.objects.all()
+
+    # --- ФИЛТРИ ---
+    location_id = request.GET.get('location')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+
+    if location_id and location_id != "":
+        events = events.filter(location_id=location_id)
+
+    if date_from:
+        events = events.filter(date__gte=date_from)
+
+    if date_to:
+        events = events.filter(date__lte=date_to)
+
+    # --- СОРТИРАНЕ ---
+    sort = request.GET.get('sort')
+
+    if sort == "date_asc":
+        events = events.order_by('date')
+    elif sort == "date_desc":
+        events = events.order_by('-date')
+    else:
+        events = events.order_by('-date')  # default
+
+    return render(request, 'events/event_list.html', {
+        'events': events,
+        'locations': locations,
+    })
 
 
 def event_detail(request, pk):
@@ -30,7 +59,7 @@ def event_edit(request, pk):
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             form.save()
-            return redirect('event_detail', pk=pk)
+            return redirect('event_list')
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_form.html', {'form': form})
@@ -71,7 +100,7 @@ def location_edit(request, pk):
         form = LocationForm(request.POST, instance=location)
         if form.is_valid():
             form.save()
-            return redirect('location_detail', pk=pk)
+            return redirect('location_list')
     else:
         form = LocationForm(instance=location)
     return render(request, 'events/location_form.html', {'form': form})
@@ -86,12 +115,3 @@ def location_delete(request, pk):
 
 
 
-
-def role_list(request):
-    roles = Role.objects.all()
-    return render(request, 'events/role_list.html', {'roles': roles})
-
-
-def role_detail(request, pk):
-    role = get_object_or_404(Role, pk=pk)
-    return render(request, 'events/role_detail.html', {'role': role})

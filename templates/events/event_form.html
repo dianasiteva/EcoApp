@@ -2,11 +2,11 @@
 {% block title %}Event Form{% endblock %}
 
 {% block content %}
-<h2>Event Form</h2>
+<h2>Събитие</h2>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="btn btn-success">Save</button>
+    <button class="btn btn-success">Запис</button>
 </form>
 {% endblock %}

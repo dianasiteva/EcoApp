@@ -2,11 +2,11 @@
 {% block title %}Location Form{% endblock %}
 
 {% block content %}
-<h2>Location Form</h2>
+<h2>Места за почистване</h2>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="btn btn-success">Save</button>
+    <button class="btn btn-success">Запис на локацията</button>
 </form>
 {% endblock %}

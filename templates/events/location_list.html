@@ -2,19 +2,19 @@
 {% block title %}Locations{% endblock %}
 
 {% block content %}
-<h1>Locations</h1>
+<h1>Локации</h1>
 
-<a href="{% url 'location_create' %}" class="btn btn-success mb-3">Create Location</a>
+<a href="{% url 'location_create' %}" class="btn btn-success mb-3">Нова локация</a>
 
 <ul class="list-group">
     {% for location in locations %}
         <li class="list-group-item">
-            <a href="{% url 'location_detail' event.pk %}">
+            <a href="{% url 'location_detail' location.pk %}">
                 {{ location.name }} — {{ location.address }}
             </a>
         </li>
     {% empty %}
-        <li class="list-group-item">No locations yet.</li>
+        <li class="list-group-item">Няма локации.</li>
     {% endfor %}
 </ul>
 {% endblock %}

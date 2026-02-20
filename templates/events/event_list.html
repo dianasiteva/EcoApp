@@ -2,9 +2,52 @@
 {% block title %}Events{% endblock %}
 
 {% block content %}
-<h1>Events</h1>
+    
+<form method="get" class="row g-3 mb-4">
 
-<a href="{% url 'event_create' %}" class="btn btn-success mb-3">Create Event</a>
+    <div class="col-md-3">
+        <label class="form-label">Локация</label>
+        <select name="location" class="form-select">
+            <option value="">Всички</option>
+            {% for loc in locations %}
+                <option value="{{ loc.id }}" {% if request.GET.location == loc.id|stringformat:"s" %}selected{% endif %}>
+                    {{ loc.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">От дата</label>
+        <input type="date" name="date_from" class="form-control"
+               value="{{ request.GET.date_from }}">
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">До дата</label>
+        <input type="date" name="date_to" class="form-control"
+               value="{{ request.GET.date_to }}">
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Сортиране по дата</label>
+        <select name="sort" class="form-select">
+            <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>Първо най-стари</option>
+            <option value="date_desc" {% if request.GET.sort == "date_desc" %}selected{% endif %}>Първо най-нови</option>
+        </select>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary">Филтър</button>
+        <a href="/events/" class="btn btn-secondary">Изчисти филтър</a>
+    </div>
+
+</form>
+    
+    
+<h1>Събития</h1>
+
+<a href="{% url 'event_create' %}" class="btn btn-success mb-3">Открий събитие</a>
 
 <ul class="list-group">
     {% for event in events %}
@@ -14,7 +57,7 @@
             </a>
         </li>
     {% empty %}
-        <li class="list-group-item">No events yet.</li>
+        <li class="list-group-item">Няма събития.</li>
     {% endfor %}
 </ul>
 {% endblock %}
