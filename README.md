@@ -22,9 +22,9 @@ A Django-based web application for managing environmental and community events w
 
 ## 🌍 Overview
 
-EcoApp is a comprehensive event management system designed specifically for ecological and environmental community initiatives. It provides a robust platform to organize events, manage participant registrations, assign roles, and track event logistics.
+EcoApp is a comprehensive event management system designed specifically for ecological and environmental community initiatives. It provides a robust platform to organize events, manage participant registrations, assign roles, and track event logistics with interactive location mapping.
 
-**Key Purpose**: Enable organizations to efficiently manage eco-friendly events and community participation with flexible role assignments and location management.
+**Key Purpose**: Enable organizations to efficiently manage eco-friendly events and community participation with flexible role assignments, location management, and geographic visualization.
 
 **Target Users**:
 - Environmental organizations
@@ -33,13 +33,14 @@ EcoApp is a comprehensive event management system designed specifically for ecol
 - Local government environmental departments
 - Educational institutions with environmental programs
 
-**Current Status**: Early development stage with core models implemented and admin interface functional.
+**Current Status**: Early development stage with core models implemented, admin interface functional, and location mapping features added.
 
 ## ✨ Features
 
 ### Core Features
 - ✅ **Event Management**: Create, update, and delete ecological events with full details
-- ✅ **Location Management**: Store and manage event locations with address and descriptions
+- ✅ **Location Management**: Store and manage event locations with address, coordinates, and descriptions
+- ✅ **Interactive Maps**: View event locations on an interactive map with coordinates
 - ✅ **Participant Registration**: Track participants with comprehensive contact information
 - ✅ **Role Assignment**: Assign multiple roles to participants (Organizer, Volunteer, Sponsor, Logistician, etc.)
 - ✅ **Admin Panel**: Complete Django admin interface for full data management
@@ -47,7 +48,8 @@ EcoApp is a comprehensive event management system designed specifically for ecol
 
 ### Implemented Features
 - Event creation and management
-- Location tracking
+- Location tracking with coordinates
+- Interactive map visualization for locations
 - Participant registration
 - Role-based assignments
 - Cascading deletion handling
@@ -59,6 +61,7 @@ EcoApp is a comprehensive event management system designed specifically for ecol
 - Event filtering and search
 - Participant status tracking
 - Email notifications
+- Advanced map features (markers, clustering)
 
 ## 📁 Project Structure
 
@@ -124,16 +127,22 @@ EcoApp/
 ### Events App
 
 #### **Location**
-Represents a physical or virtual location where events are held.
+Represents a physical or virtual location where events are held with geographic coordinates for mapping.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `name` | CharField(100) | Location name |
 | `address` | TextField | Full address |
 | `description` | TextField | Optional location details |
+| `latitude` | DecimalField | Latitude coordinate for map display |
+| `longitude` | DecimalField | Longitude coordinate for map display |
 
 **Methods**:
 - `__str__()`: Returns the location name
+
+**Features**:
+- Geographic coordinates stored for interactive map integration
+- Enables location-based filtering and visualization
 
 ---
 
@@ -347,7 +356,7 @@ SECURE_CONTENT_SECURITY_POLICY = {...}
 2. Login with your superuser credentials
 3. Manage:
    - **Events**: Create new events, view all events
-   - **Locations**: Add/edit locations
+   - **Locations**: Add/edit locations with coordinates for map display
    - **Roles**: Define available roles
    - **Participants**: Register new participants
    - **Participant Event Roles**: Assign roles to participants
@@ -358,10 +367,18 @@ Visit `http://localhost:8000/` to access the home page.
 
 ### Example Workflows
 
+#### Adding a Location with Map Coordinates
+1. Log in to admin panel
+2. Go to Locations → Add Location
+3. Fill in name and address
+4. Enter latitude and longitude coordinates (e.g., 40.7128, -74.0060)
+5. Add optional description
+6. Click Save
+
 #### Adding an Event
 1. Log in to admin panel
 2. Go to Events → Add Event
-3. Fill in title, date, select location, add description
+3. Fill in title, date, select location (with map coordinates), add description
 4. Click Save
 
 #### Registering a Participant
@@ -388,12 +405,13 @@ GET    /api/events/<id>/             # Get event details
 PUT    /api/events/<id>/             # Update event
 DELETE /api/events/<id>/             # Delete event
 
+GET    /api/locations/               # List all locations with coordinates
+POST   /api/locations/               # Create location
+GET    /api/locations/map/           # Get map data for all locations
+
 GET    /api/participants/            # List all participants
 POST   /api/participants/            # Register new participant
 GET    /api/participants/<id>/       # Get participant details
-
-GET    /api/locations/               # List all locations
-POST   /api/locations/               # Create location
 
 GET    /api/roles/                   # List all available roles
 ```
@@ -420,14 +438,21 @@ Location (1) ──────────→ (Many) Event
 ```
 | id | title | date | location_id | description | created_at |
 |----|-------|------|-------------|-------------|------------|
-| 1  | Tree Planting | 2026-03-15 | 1 | ... | 2026-02-18 |
+| 1  | Tree Planting | 2025-03-15 | 1 | ... | 2025-02-18 |
+```
+
+**Locations Table**
+```
+| id | name | address | latitude | longitude | description |
+|----|------|---------|----------|-----------|-------------|
+| 1  | Central Park | 123 Park Ave | 40.7829 | -73.9654 | Main event venue |
 ```
 
 **Participants Table**
 ```
 | id | first_name | last_name | email | phone | appended_at |
 |----|------------|-----------|-------|-------|------------|
-| 1  | John | Doe | john@example.com | 555-1234 | 2026-02-18 |
+| 1  | John | Doe | john@example.com | 555-1234 | 2025-02-18 |
 ```
 
 **ParticipantEventRole Table**
@@ -578,4 +603,4 @@ This project is licensed under the [Add your license here]
 **Last Updated**: February 18, 2025
 **Django Version**: 6.0.2
 **Python Version**: 3.8+
-**Current Version**: 0.1.0 (Early Development)
+**Current Version**: 0.1.1 (Map Feature Added)

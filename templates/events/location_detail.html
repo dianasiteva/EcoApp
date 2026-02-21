@@ -3,9 +3,42 @@
 
 {% block content %}
 <h2>{{ location.name }}</h2>
-<p><strong>Address:</strong> {{ location.address }}</p>
-<p>{{ location.description }}</p>
+
+<p><strong>Адрес:</strong> {{ location.address }}</p>
+
+{% if location.description %}
+<p><strong>Описание:</strong> {{ location.description }}</p>
+{% endif %}
+
+{% if location.latitude and location.longitude %}
+    <h4 class="mt-4">Карта</h4>
+    <div id="map" style="height: 400px;" class="mb-4"></div>
+{% endif %}
 
 <a href="{% url 'location_edit' location.pk %}" class="btn btn-primary">Корекция</a>
 <a href="{% url 'location_delete' location.pk %}" class="btn btn-danger">Изтриване</a>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+{% if location.latitude and location.longitude %}
+<script>
+    var lat = {{ location.latitude }};
+    var lng = {{ location.longitude }};
+
+    var map = L.map('map').setView([lat, lng], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map)
+        .bindPopup("{{ location.name }}")
+        .openPopup();
+</script>
+{% endif %}
+
 {% endblock %}

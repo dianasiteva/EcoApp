@@ -41,19 +41,20 @@ class EventForm(forms.ModelForm):
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
-        fields = ['name', 'address', 'description']
+        fields = ['name', 'address', 'description', 'latitude', 'longitude']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'latitude': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
+            'longitude': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
         }
 
         labels = {
             'name': 'Наименование',
             'address': 'Адрес',
             'description': 'Описание',
+            'latitude': 'Географска ширина',
+            'longitude': 'Географска дължина',
         }
-
-
-
