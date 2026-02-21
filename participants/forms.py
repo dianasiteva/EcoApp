@@ -33,11 +33,12 @@ class ParticipantForm(forms.ModelForm):
 class ParticipantEventRoleForm(forms.ModelForm):
     class Meta:
         model = ParticipantEventRole
-        fields = ['participant', 'role']
+        fields = ['participant', 'role', 'information']
 
         labels = {
                      'participant': 'Доброволец',
-                     'role': 'Роля',}
+                     'role': 'Роля',
+        'information': 'Допълнителна информация',}
 
 
     def __init__(self, *args, event=None, **kwargs):

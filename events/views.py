@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Event, Location, Role
-from .forms import EventForm, LocationForm
 
+from participants.models import ParticipantEventRole
+from .models import Event, Location
+from .forms import EventForm, LocationForm
+from django.utils import timezone
 
 def event_list(request):
     events = Event.objects.all()
@@ -37,9 +39,27 @@ def event_list(request):
     })
 
 
+# def event_detail(request, pk):
+#     event = get_object_or_404(Event, pk=pk)
+#     return render(request, 'events/event_detail.html', {'event': event})
+
+
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    return render(request, 'events/event_detail.html', {'event': event})
+    now = timezone.now().date()
+
+    return render(request, 'events/event_detail.html', {
+        'event': event,
+        'now': now,
+    })
+
+
+
+def remove_assignment(request, per_id):
+    assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+    event_id = assignment.event.pk
+    assignment.delete()
+    return redirect('event_detail', pk=event_id)
 
 
 def event_create(request):

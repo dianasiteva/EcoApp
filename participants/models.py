@@ -17,9 +17,10 @@ class ParticipantEventRole(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    information = models.TextField(blank=True)
 
     class Meta:
         unique_together = ('participant', 'event', 'role')
 
     def __str__(self):
-        return f"{self.participant} → {self.event} ({self.role})"
+        return f"{self.participant.first_name} {self.participant.last_name} → {self.event.title} ({self.role.name})"

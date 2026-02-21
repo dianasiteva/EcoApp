@@ -15,4 +15,6 @@ urlpatterns = [
     path('locations/create/', views.location_create, name='location_create'),
     path('locations/<int:pk>/edit/', views.location_edit, name='location_edit'),
     path('locations/<int:pk>/delete/', views.location_delete, name='location_delete'),
+    path('remove/<int:per_id>/', views.remove_assignment, name='remove_assignment'),
+
 ]

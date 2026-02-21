@@ -7,25 +7,38 @@
 <p><strong>Локация:</strong> {{ event.location }}</p>
 <p>{{ event.description }}</p>
 
-<a href="{% url 'event_edit' event.pk %}" class="btn btn-primary">Корекция</a>
-<a href="{% url 'event_delete' event.pk %}" class="btn btn-danger">Изтриване</a>
-
+{% if event.date >= now %}
+    <a href="{% url 'event_edit' event.pk %}" class="btn btn-primary">Корекция</a>
+    <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger">Изтриване</a>
+{% endif %}
 
 <h3 class="mt-4">Доброволци</h3>
 
 <ul class="list-group">
     {% for per in event.participanteventrole_set.all %}
         <li class="list-group-item">
-            {{ per.participant.first_name }} {{ per.participant.last_name }} — <strong>{{ per.role.name }}</strong>
+            
+            {% if event.date >= now %} 
+               <a href="{% url 'remove_assignment' per.pk %}"
+                  class="btn btn-sm btn-outline-danger me-2 p-1" title="Премахни">
+                  <i class="bi bi-x-lg"></i> </a>            
+            {% endif %}
+
+        {{ per.participant.first_name }} {{ per.participant.last_name }} — <strong>{{ per.role.name }}</strong>
+            {{ per.information }}
+
+
         </li>
-    {% empty %}
-        <li class="list-group-item">Все още няма включени доброволци.</li>
+        
+    {% empty %}<li class="list-group-item">Все още няма включени доброволци.</li>
     {% endfor %}
 </ul>
 
-{#<a href="{% url 'assign_role' %}" class="btn btn-outline-success mt-3">Включи доброволец</a>#}
-<a href="{% url 'assign_role' event.pk %}" class="btn btn-outline-success mt-3">
-    Включи доброволец
-</a>
+{% if event.date >= now %}
+    <a href="{% url 'assign_role' event.pk %}" class="btn btn-outline-success mt-3">
+        Включи доброволец
+    </a>
+
+{% endif %}
 
 {% endblock %}
