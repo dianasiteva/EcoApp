@@ -604,3 +604,4 @@ This project is licensed under the [Add your license here]
 **Django Version**: 6.0.2
 **Python Version**: 3.8+
 **Current Version**: 0.1.1 (Map Feature Added)
+
