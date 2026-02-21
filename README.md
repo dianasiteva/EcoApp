@@ -33,6 +33,8 @@ EcoApp is a comprehensive event management system designed specifically for ecol
 - Local government environmental departments
 - Educational institutions with environmental programs
 
+**Current Status**: Early development stage with core models implemented and admin interface functional.
+
 ## ✨ Features
 
 ### Core Features
@@ -43,12 +45,20 @@ EcoApp is a comprehensive event management system designed specifically for ecol
 - ✅ **Admin Panel**: Complete Django admin interface for full data management
 - ✅ **Database Integrity**: Ensures unique participant-event-role combinations
 
-### Advanced Features
-- Event date tracking and organization
-- Participant timestamp tracking (joined date)
-- Flexible role system (easily add new roles)
+### Implemented Features
+- Event creation and management
+- Location tracking
+- Participant registration
+- Role-based assignments
 - Cascading deletion handling
 - Email and phone contact information
+
+### Planned Features
+- RESTful API endpoints
+- Frontend UI (currently admin-only)
+- Event filtering and search
+- Participant status tracking
+- Email notifications
 
 ## 📁 Project Structure
 
@@ -68,7 +78,7 @@ EcoApp/
 │
 ├── core/                        # Core application (homepage & main site views)
 │   ├── __init__.py
-│   ├── models.py                # Core data models (currently empty)
+│   ├── models.py                # Core data models
 │   ├── views.py                 # View logic for core pages
 │   ├── urls.py                  # Core URL patterns
 │   ├── admin.py                 # Admin interface registration
@@ -267,6 +277,16 @@ DATABASES = {
 }
 ```
 
+For SQLite (development):
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+
 #### 5. Run Migrations
 ```bash
 python manage.py migrate
@@ -360,7 +380,7 @@ Visit `http://localhost:8000/` to access the home page.
 - `GET /` - Home page
 - `GET /admin/` - Admin interface
 
-### Future API Endpoints (Planned)
+### Planned API Endpoints
 ```
 GET    /api/events/                  # List all events
 POST   /api/events/                  # Create new event
@@ -545,17 +565,17 @@ brew install postgresql
 
 ## 📝 License
 
-[Add your license here]
+This project is licensed under the [Add your license here]
 
 ## 👥 Contact & Support
 
-**Project Maintainer**: [Diana Siteva]
-**Email**: [dianasiteva@gmail.com]
-**Issues**: Please report bugs and feature requests in the GitHub issues section
+**Project Maintainer**: Diana Siteva
+**Email**: dianasiteva@gmail.com
+**GitHub Issues**: Please report bugs and feature requests in the GitHub issues section
 
 ---
 
-**Last Updated**: February 18, 2026
+**Last Updated**: February 18, 2025
 **Django Version**: 6.0.2
 **Python Version**: 3.8+
-
+**Current Version**: 0.1.0 (Early Development)
