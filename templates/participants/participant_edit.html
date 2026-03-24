@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Редакция на профил{% endblock %}
+
+{% block content %}
+<h2>Редакция на профил</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <h4>Лични данни</h4>
+    {{ user_form.as_p }}
+
+    <h4>Допълнителна информация</h4>
+    {{ participant_form.as_p }}
+
+    <button type="submit" class="btn btn-success">Запази</button>
+    <a href="{% url 'participant_detail' request.user.participant.pk %}" class="btn btn-secondary">Отказ</a>
+</form>
+
+{% endblock %}

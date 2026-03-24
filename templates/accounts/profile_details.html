@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Моят профил</h3>
+    <hr>
+
+    <p><strong>Име:</strong> {{ participant.user.first_name }}</p>
+    <p><strong>Фамилия:</strong> {{ participant.user.last_name }}</p>
+    <p><strong>Email:</strong> {{ participant.user.email }}</p>
+    <p><strong>Телефон:</strong> {{ participant.phone }}</p>
+    <p><strong>Град:</strong> {{ participant.city }}</p>
+    <p><strong>Област:</strong> {{ participant.city.district }}</p>
+    <p><strong>Рег. номер на МПС:</strong> {{ participant.car_registration_number }}</p>
+</div>
+{% endblock %}

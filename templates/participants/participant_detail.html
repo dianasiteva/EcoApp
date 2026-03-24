@@ -2,12 +2,20 @@
 {% block title %}Participant Details{% endblock %}
 
 {% block content %}
-<h2>{{ participant.first_name }} {{ participant.last_name }}</h2>
+<h2>{{ participant.user.first_name }} {{ participant.user.last_name }}</h2>
 
-<p><strong>Email:</strong> {{ participant.email }}</p>
+<p><strong>Електронна поща:</strong> {{ participant.user.email }}</p>
 
 {% if participant.phone %}
-<p><strong>Phone:</strong> {{ participant.phone }}</p>
+<p><strong>Телефонен номер:</strong> {{ participant.phone }}</p>
+{% endif %}
+
+{% if participant.city %}
+    <p><strong>Град:</strong> {{ participant.city.name }} <strong>Област:</strong> {{ participant.city.get_district_display }}</p>
+{% endif %}
+
+{% if participant.car_registration_number %}
+<p><strong>Регистрационен номер на МПС:</strong> {{ participant.car_registration_number }}</p>
 {% endif %}
 
 <a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Корекция</a>
@@ -15,12 +23,13 @@
 
 
 
-<h3 class="mt-4">Събития</h3>
+<h3 class="mt-4">Участвал в събитията:</h3>
 
 <ul class="list-group">
     {% for per in participant.participanteventrole_set.all %}
         <li class="list-group-item">
-            {{ per.event.title }} — <strong>{{ per.role.name }}</strong>— { per.role.description }}
+            <strong>{{ per.event.title }}</strong>
+            — {{ per.role.name }} ({{ per.role.description }})
         </li>
     {% empty %}
         <li class="list-group-item">Не е включен към събитие.</li>

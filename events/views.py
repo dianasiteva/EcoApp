@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView
 
 from participants.models import ParticipantEventRole
 from .models import Event, Location
 from .forms import EventForm, LocationForm
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def event_list(request):
     events = Event.objects.all()
@@ -37,11 +39,6 @@ def event_list(request):
         'events': events,
         'locations': locations,
     })
-
-
-# def event_detail(request, pk):
-#     event = get_object_or_404(Event, pk=pk)
-#     return render(request, 'events/event_detail.html', {'event': event})
 
 
 def event_detail(request, pk):
@@ -93,9 +90,16 @@ def event_delete(request, pk):
     return render(request, 'events/event_delete.html', {'event': event})
 
 
-def location_list(request):
-    locations = Location.objects.all()
-    return render(request, 'events/location_list.html', {'locations': locations})
+# def location_list(request):
+#     locations = Location.objects.all()
+#     return render(request, 'events/location_list.html', {'locations': locations})
+
+
+class LocationListView(LoginRequiredMixin, ListView):
+    model = Location
+    template_name = 'events/location_list.html'
+    context_object_name = 'locations'
+    login_url = 'login'
 
 
 def location_detail(request, pk):

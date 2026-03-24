@@ -1,25 +1,5 @@
-{#{% extends 'base.html' %}#}
-{#{% block title %}EcoApp — Clean Roads{% endblock %}#}
-
-{#{% block content %}#}
-{#<div class="text-center">#}
-{#    <h1 class="mb-4">ПЛАТФОРМА ЗА ДОБРОВОРЕН ТРУД ЗА ПОЧИСТВАНЕ НА ПЪТИЩАТА НА БЪЛГАРИЯ</h1>#}
-{##}
-{#    <p class="lead">#}
-{#        Добре дошли в EcoApp - вашата платформа за доброволен труд за чиста България! Нашата мисия е да обединим хората, които искат да допринесат за по-чиста и по-зелена околна среда, като организираме събития за почистване на пътищата в цялата страна.#}
-{#    </p>#}
-{#    <p class="fancy">#}
-{#        Пътуваме по българските пътища и виждаме толкова пластмаса, гуми, найлонови торбички, осеяни покрай канавките и по отбивките Те се виждат особено в края на зимата преди да се появи зеленината. Нека се обединим за чиста България и да направим нашите пътища по-красиви и по-безопасни за всички!#}
-{#    </p>#}
-{##}
-{#    <div class="mt-4">#}
-{#        <a href="/events/" class="btn btn-success btn-lg m-2">Събития</a>#}
-{#        <a href="/events/locations/" class="btn btn-outline-success btn-lg m-2">Локации</a>#}
-{#        <a href="/participants/" class="btn btn-outline-primary btn-lg m-2">Доброволци</a>#}
-{#    </div>#}
-```html
 {% extends 'base.html' %}
-{% block title %}EcoApp — Clean Roads{% endblock %}
+{% block title %}EcoApp — Чисти Пътища{% endblock %}
 {% load static %}
 {% block content %}
 <section class="hero-section text-white text-center d-flex align-items-center">
@@ -42,12 +22,13 @@
             <a href="/events/" class="btn btn-success btn-lg px-4">
                 🌿 Събития
             </a>
+
+
             <a href="/events/locations/" class="btn btn-outline-light btn-lg px-4">
                 📍 Локации
             </a>
-{#            <a href="/participants/" class="btn btn-outline-primary btn-lg px-4">#}
-{#                👥 Доброволци#}
-{#            </a>#}
+
+
             <a href="/participants/" class="btn btn-lg px-4 btn-volunteers">
                 👥 Доброволци
             </a>
@@ -88,6 +69,5 @@
 
 </style>
 {% endblock %}
-```
-{#</div>#}
-{#{% endblock %}#}
+
+

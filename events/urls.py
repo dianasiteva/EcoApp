@@ -1,5 +1,6 @@
 from django.urls import path
 from events import views
+from events.views import LocationListView
 
 urlpatterns = [
     # Event URLs
@@ -10,7 +11,7 @@ urlpatterns = [
     path('<int:pk>/delete/', views.event_delete, name='event_delete'),
 
     # Location URLs
-    path('locations/', views.location_list, name='location_list'),
+    path('locations/', LocationListView.as_view(), name='location_list'),
     path('locations/<int:pk>/', views.location_detail, name='location_detail'),
     path('locations/create/', views.location_create, name='location_create'),
     path('locations/<int:pk>/edit/', views.location_edit, name='location_edit'),
