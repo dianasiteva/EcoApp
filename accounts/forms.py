@@ -1,19 +1,16 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
-from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm, BaseUserCreationForm
 
 UserModel = get_user_model()
 
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
 
+class AppUserCreationForm(BaseUserCreationForm):
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        model = UserModel
+        fields = ["email"]
 
-class SetUnusablePasswordForm(forms.Form):
-    user = forms.ModelChoiceField(
-        queryset=UserModel.objects.order_by('username'),
-        label="Потребител",
-    )
+
+class AppUserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = UserModel
+

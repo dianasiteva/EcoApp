@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from events.models import Event, Role
-from .forms import UserUpdateForm, ParticipantUpdateForm, ParticipantEventRoleForm
+from .forms import  ParticipantUpdateForm, ParticipantEventRoleForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Participant
@@ -33,13 +33,13 @@ class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('participant_detail', kwargs={'pk': self.object.pk})
 
 
-#
-# class ParticipantDeleteView(LoginRequiredMixin, DeleteView):
-#     model = Participant
-#     template_name = 'participants/participant_confirm_delete.html'
-#     success_url = reverse_lazy('participant_list')
-#     login_url = 'login'
-#
+
+class ParticipantDeleteView(LoginRequiredMixin, DeleteView):
+    model = Participant
+    template_name = 'participants/participant_delete.html'
+    success_url = reverse_lazy('participant_list')
+    login_url = 'login'
+
 
 
 

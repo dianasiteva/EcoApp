@@ -16,10 +16,13 @@ class Cities(models.Model):
 
 
 class Participant(models.Model):
-    user = OneToOneField(User, on_delete=models.CASCADE)
+    contact_email = models.EmailField()
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
     city = models.ForeignKey(Cities, on_delete=models.SET_NULL, blank=True, null=True)
-    car_registration_number = models.CharField( max_length=8, validators=[plate_validator], blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True,null=True)
+    car_registration_number = models.CharField(max_length=8, validators=[plate_validator], blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    profile_picture = models.URLField(blank=True, null=True)
     appended_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

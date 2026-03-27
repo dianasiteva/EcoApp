@@ -1,10 +1,10 @@
-from django.apps import AppConfig
-
-
-
-class ParticipantsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'participants'
-
-    def ready(self):
-        import participants.signals
+# from django.apps import AppConfig
+#
+#
+#
+# class ParticipantsConfig(AppConfig):
+#     default_auto_field = 'django.db.models.BigAutoField'
+#     name = 'participants'
+#
+#     def ready(self):
+#         pass
