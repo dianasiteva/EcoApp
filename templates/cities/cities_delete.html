@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+    <h3>Изтриване на град</h3>
+    <p>Сигурни ли сте, че искате да изтриете <strong>{{ object.name }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger">Изтрий</button>
+        <a href="{% url 'cities:cities_list' %}" class="btn btn-secondary">Отказ</a>
+    </form>
+</div>
+{% endblock %}

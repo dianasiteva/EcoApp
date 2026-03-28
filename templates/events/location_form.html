@@ -21,9 +21,11 @@
 
 <script>
     // Начална позиция (пример: България)
-    var startLat = {{ form.instance.latitude|default:42.6977 }};
-    var startLng = {{ form.instance.longitude|default:23.3219 }};
+    var startLat = "{{ form.instance.latitude|default_if_none:42.6977 }}".replace(",", ".");
+    var startLng = "{{ form.instance.longitude|default_if_none:23.3219 }}".replace(",", ".");
 
+    startLat = parseFloat(startLat);
+    startLng = parseFloat(startLng);
     var map = L.map('map').setView([startLat, startLng], 7);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

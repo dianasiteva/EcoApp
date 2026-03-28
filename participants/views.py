@@ -1,8 +1,7 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from events.models import Event, Role
-from .forms import  ParticipantUpdateForm, ParticipantEventRoleForm
+from .forms import ParticipantEventRoleForm, ParticipantForm
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from .models import Participant
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -15,10 +14,17 @@ class ParticipantListView(LoginRequiredMixin, ListView):
     login_url = 'login'
 
 
+class ParticipantCreateView(CreateView):
+    model = Participant
+    form_class = ParticipantForm
+    template_name = 'participants/participant_create.html'
+    success_url = reverse_lazy('participants:list')
+
+
 class ParticipantDetailView(LoginRequiredMixin, DetailView):
     model = Participant
     template_name = 'participants/participant_detail.html'
-    context_object_name = 'participant'
+    context_object_name = 'participants'
     login_url = 'login'
 
 

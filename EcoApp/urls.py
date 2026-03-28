@@ -25,6 +25,7 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('participants/', include('participants.urls')),
     path('accounts/', include('accounts.urls')),
+    path('cities/', include('cities.urls')),
 ]
 
 handler404 = 'core.views.custom_404'

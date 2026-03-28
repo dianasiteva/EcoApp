@@ -17,6 +17,7 @@ MY_APPS = [
     'core',
     'participants',
     'accounts',
+    'cities',
 ]
 
 INSTALLED_APPS = [
@@ -43,18 +44,20 @@ ROOT_URLCONF = 'EcoApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.static',  # ← ЛИПСВА
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'EcoApp.wsgi.application'
 

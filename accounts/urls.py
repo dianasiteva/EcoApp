@@ -18,9 +18,9 @@ urlpatterns = [
         next_page='home'
     ), name='logout'),
 
-    # path('register/', views.RegisterView.as_view(), name='register'),
+    path('register/', views.RegisterAppUserView.as_view(), name='register'),
 
-    # path('details/', views.ProfileDetailView.as_view(), name='details'),
+     path('details/', views.ProfileDetailView.as_view(), name='details'),
 
 
     # path('set-unusable-password/', views.set_unusable_password, name='set-unusable-password'),

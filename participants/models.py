@@ -1,18 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import OneToOneField
 
+from cities.models import Cities
 from events.models import Event, Role
-from participants.choises import DistrictChoice
 from participants.validators import plate_validator
 
-
-class Cities(models.Model):
-    name = models.CharField(max_length=20)
-    district = models.CharField(max_length=20, choices=DistrictChoice.choices)
-
-    def __str__(self):
-        return self.name
 
 
 class Participant(models.Model):
@@ -26,8 +18,8 @@ class Participant(models.Model):
     appended_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        full_name = f"{self.user.first_name} {self.user.last_name}".strip()
-        return full_name or self.user.username
+        full_name = f"{self.first_name} {self.last_name}".strip()
+        return full_name
 
 
 class ParticipantEventRole(models.Model):
@@ -45,6 +37,6 @@ class ParticipantEventRole(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.participant.user.first_name} {self.participant.user.last_name} → {self.event.title} ({self.role.name})"
+        return f"{self.participant.first_name} {self.participant.last_name} → {self.event.title} ({self.role.name})"
 
 

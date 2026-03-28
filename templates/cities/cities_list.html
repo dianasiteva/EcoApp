@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Градове</h3>
+{#    {% if user.is_authenticated %}#}
+    <a href="{% url 'cities:cities_create' %}" class="btn btn-primary mb-3">Добави град или село</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Област</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for city in cities %}
+            <tr>
+                <td>{{ city.name }}</td>
+                <td>{{ city.get_district_display }}</td>
+                <td>
+                    <a href="{% url 'cities:cities_edit' city.pk %}" class="btn btn-sm btn-warning">Редакция</a>
+                    <a href="{% url 'cities:cities_delete' city.pk %}" class="btn btn-sm btn-danger">Изтриване</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

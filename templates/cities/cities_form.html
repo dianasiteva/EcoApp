@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Населени места{% endblock %}
+
+{% block content %}
+<h2>Град/Село</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Запис</button>
+</form>
+{% endblock %}

@@ -29,10 +29,10 @@ class EventForm(forms.ModelForm):
 
         error_messages = {
             'title': {
-                'required': 'Please enter a title for the event.',
+                'required': 'Моля въведете име на събитието.',
             },
             'date': {
-                'required': 'Please select a date.',
+                'required': 'Моля посочете дата.',
             },
         }
 
@@ -41,12 +41,13 @@ class EventForm(forms.ModelForm):
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
-        fields = ['name', 'address', 'description', 'latitude', 'longitude']
+        fields = ['name', 'address', 'description', 'district', 'latitude', 'longitude']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'district': forms.Select(attrs={'class': 'form-control'}),
             'latitude': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
             'longitude': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
         }
@@ -55,6 +56,7 @@ class LocationForm(forms.ModelForm):
             'name': 'Наименование',
             'address': 'Адрес',
             'description': 'Описание',
+            'district': 'Област',
             'latitude': 'Географска ширина',
             'longitude': 'Географска дължина',
         }
