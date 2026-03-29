@@ -1,4 +1,6 @@
 from django import forms
+
+from cities.models import Cities
 from .models import Participant, ParticipantEventRole
 
 
@@ -15,7 +17,7 @@ class ParticipantForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             # 'district': forms.EmailInput(attrs={'class': 'form-control'}),
             'car_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'profile_picture': forms.URLInput(attrs={'placeholder': 'Въведете URL адрес на профилна снимка/аватар (по избор)', 'class': 'form-control'}),
+
         }
 
         labels = {
@@ -29,47 +31,30 @@ class ParticipantForm(forms.ModelForm):
             'profile_picture': 'Профилна снимка/аватар'
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['city'].queryset = Cities.objects.all().order_by('name')
 
 
-
-
-#
-# class UserUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'email']
-#
-#         widgets = {
-#             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-#             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-#             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-#         }
-#
-#         labels = {
-#             'first_name': 'Име',
-#             'last_name': 'Фамилия',
-#             'email': 'Електронна поща',
-#         }
-#
-#         error_messages = {
-#             'email': {
-#                 'invalid': 'Невалиден адрес на електронна поща.',
-#             }
-#         }
-#
 
 class ParticipantUpdateForm(forms.ModelForm):
     class Meta:
         model = Participant
-        fields = ['city', 'car_registration_number', 'phone']
+        fields = ['first_name', 'last_name', 'contact_email', 'city', 'car_registration_number', 'phone']
 
         widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'car_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
         labels = {
+            'first_name': '',
+            'last_name': '',
+            'contact_email': '',
             'phone': 'Телефонен номер',
             'city': 'Град',
             'car_registration_number': 'Регистрационен номер на автомобил (по избор)',
@@ -81,7 +66,9 @@ class ParticipantUpdateForm(forms.ModelForm):
             }
         }
 
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['city'].queryset = Cities.objects.all().order_by('name')
 
 
 

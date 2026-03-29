@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from events.models import Event, Role
-from .forms import ParticipantEventRoleForm, ParticipantForm
+from .forms import ParticipantEventRoleForm, ParticipantForm, ParticipantUpdateForm
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Participant
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -23,16 +23,18 @@ class ParticipantCreateView(CreateView):
 
 class ParticipantDetailView(LoginRequiredMixin, DetailView):
     model = Participant
+    form_class = ParticipantForm
     template_name = 'participants/participant_detail.html'
-    context_object_name = 'participants'
+    context_object_name = 'participant'
     login_url = 'login'
 
 
 
 class ParticipantUpdateView(LoginRequiredMixin, UpdateView):
     model = Participant
-    fields = ['city', 'phone', 'car_registration_number']
+    form_class = ParticipantUpdateForm
     template_name = 'participants/participant_edit.html'
+    context_object_name = "participant"
     login_url = 'login'
 
     def get_success_url(self):

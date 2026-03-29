@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
-{% block title %}Participant Details{% endblock %}
+{% block title %}Данни за доброволец{% endblock %}
 
 {% block content %}
-<h2>{{ participant.user.first_name }} {{ participant.user.last_name }}</h2>
+<h2>{{ participant.first_name }} {{ participant.last_name }}</h2>
 
-<p><strong>Електронна поща:</strong> {{ participant.user.email }}</p>
+{% if participant.profile_picture %}
+    <img src="{{ participant.profile_picture.url }}"
+         alt="Profile picture"
+         style="width:150px; height:150px; object-fit:cover; border-radius:8px; margin-bottom:15px;">
+{% endif %}
+
+<p><strong>Електронна поща:</strong> {{ participant.contact_email }}</p>
 
 {% if participant.phone %}
 <p><strong>Телефонен номер:</strong> {{ participant.phone }}</p>
 {% endif %}
 
 {% if participant.city %}
-    <p><strong>Град:</strong> {{ participant.city.name }} <strong>Област:</strong> {{ participant.city.get_district_display }}</p>
+<p>
+    <strong>Град:</strong> {{ participant.city.name }}
+    <strong>Област:</strong> {{ participant.city.get_district_display }}
+</p>
 {% endif %}
 
 {% if participant.car_registration_number %}
@@ -20,8 +29,6 @@
 
 <a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Корекция</a>
 <a href="{% url 'participant_delete' participant.pk %}" class="btn btn-danger">Изтриване</a>
-
-
 
 <h3 class="mt-4">Участвал в събитията:</h3>
 

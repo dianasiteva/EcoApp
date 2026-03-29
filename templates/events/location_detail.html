@@ -5,14 +5,14 @@
 <h2>{{ location.name }}</h2>
 
 <p><strong>Адрес:</strong> {{ location.address }}</p>
-
+<p><strong>Област:</strong> {{ location.get_district_display }}</p>
 {% if location.description %}
 <p><strong>Описание:</strong> {{ location.description }}</p>
 {% endif %}
 
 {% if location.latitude and location.longitude %}
     <h4 class="mt-4">Карта</h4>
-    <div id="map" style="height: 400px;" class="mb-4"></div>
+    <div id="map" style="height: 300px;" class="mb-4"></div>
 {% endif %}
 
 <a href="{% url 'location_edit' location.pk %}" class="btn btn-primary">Корекция</a>

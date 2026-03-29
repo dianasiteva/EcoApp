@@ -1,10 +1,10 @@
+from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 
 from cities.models import Cities
 from events.models import Event, Role
-from participants.validators import plate_validator
-
+from participants.validators import plate_validator, validate_image
 
 
 class Participant(models.Model):
@@ -14,8 +14,24 @@ class Participant(models.Model):
     city = models.ForeignKey(Cities, on_delete=models.SET_NULL, blank=True, null=True)
     car_registration_number = models.CharField(max_length=8, validators=[plate_validator], blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    profile_picture = models.URLField(blank=True, null=True)
+    profile_picture = models.ImageField(
+        upload_to="participants/",
+        validators=[validate_image],
+        blank=True,
+        null=True
+    )
     appended_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.profile_picture:
+            img = Image.open(self.profile_picture.path)
+
+            max_size = (800, 800)
+            img.thumbnail(max_size, Image.LANCZOS)
+            img.save(self.profile_picture.path)
+
 
     def __str__(self):
         full_name = f"{self.first_name} {self.last_name}".strip()
