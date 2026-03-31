@@ -8,7 +8,7 @@
     {% csrf_token %}
 
     <div class="row">
-        <!-- Лява колона -->
+
         <div class="col-md-8">
 
             <div class="mb-3">
@@ -27,17 +27,25 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Град</label>
-                {{ form.city }}
+                {{ form.city.label_tag }}
+
+                <div class="d-flex gap-2">
+                    {{ form.city }}
+
+                    <a href="{% url 'cities:cities_list' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-plus-circle"></i> Градове
+                    </a>
+                </div>
             </div>
 
+
             <div class="mb-3">
-                <label class="form-label">Телефон</label>
+                <label class="form-label">Телефонен номер (по избор)</label>
                 {{ form.phone }}
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Регистрационен номер на МПС</label>
+                <label class="form-label">Регистрационен номер на МПС (по избор)</label>
                 {{ form.car_registration_number }}
             </div>
 
@@ -48,7 +56,7 @@
 
         </div>
 
-        <!-- Дясна колона: снимка -->
+
         <div class="col-md-4 text-center">
 
             {% if participant.profile_picture %}
@@ -61,7 +69,7 @@
             {% endif %}
 
             <div class="mb-3">
-                <label class="form-label">Смени снимката</label>
+                <label class="form-label">Смени снимката (по избор)</label>
                 {{ form.profile_picture }}
             </div>
 

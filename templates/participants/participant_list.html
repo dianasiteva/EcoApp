@@ -2,6 +2,54 @@
 {% block title %}Participants{% endblock %}
 
 {% block content %}
+
+<form method="get" class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <label class="form-label">Населено място</label>
+        <select name="city" class="form-select">
+            <option value="">Всички</option>
+            {% for city in cities %}
+                <option value="{{ city.id }}" {% if request.GET.city == city.id|stringformat:"s" %}selected{% endif %}>
+                    {{ city.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="col-md-3">
+        <label class="form-label">Област</label>
+        <select name="district" class="form-select">
+            <option value="">Всички</option>
+            {% for key, label in districts %}
+                <option value="{{ key }}"
+                    {% if request.GET.district == key %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="col-md-3">
+        <label class="form-label">Сортиране по име и фамилия</label>
+        <select name="sort" class="form-select">
+            <option value="participant.first_name_asc" {% if request.GET.sort == "participant.first_name_asc" %}selected{% endif %}>А - Я</option>
+            <option value="participant.first_name_desc" {% if request.GET.sort == "participant.first_name_desc" %}selected{% endif %}>Я - А</option>
+        </select>
+    </div>
+
+
+    <div class="col-12">
+        <button class="btn btn-primary">Посочи желаните филтри и сортировка и приложи</button>
+        <a href="?clear=1" class="btn btn-secondary">Изчисти филтър и сортировка</a>
+    </div>
+
+
+</form>
+
+
 <h1>Доброволци</h1>
 
 <a href="{% url 'participant_create' %}" class="btn btn-success mb-3">Запиши се за доброволец</a>
@@ -10,7 +58,7 @@
     {% for participant in participants %}
         <li class="list-group-item">
             <a href="{% url 'participant_detail' participant.pk %}">
-                {{ participant.first_name }} {{ participant.last_name }}
+                {{ participant.first_name }} {{ participant.last_name }} - гр./с. {{ participant.city.name }} , област {{ participant.city.get_district_display }}
             </a>
         </li>
     {% empty %}

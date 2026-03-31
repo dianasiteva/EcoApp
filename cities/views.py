@@ -1,6 +1,5 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
 from cities.forms import CitiesForm
 from cities.models import Cities
 
@@ -33,3 +32,6 @@ class CitiesDeleteView(DeleteView):
     model = Cities
     template_name = 'cities/cities_delete.html'
     success_url = reverse_lazy('cities:cities_list')
+
+
+

@@ -2,6 +2,59 @@
 {% block title %}Локации{% endblock %}
 
 {% block content %}
+
+<form method="get" class="row g-3 mb-4">
+
+<div class="col-md-3">
+    <label class="form-label">Локация</label>
+    <select name="location" class="form-select">
+        <option value="">Всички</option>
+        {% for loc in locations %}
+            <option value="{{ loc.id }}"
+                {% if request.GET.location == loc.id|stringformat:"s" %}selected{% endif %}>
+                {{ loc.name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+
+<div class="col-md-3">
+    <label class="form-label">Търси по име</label>
+    <input type="text" name="search" class="form-control"
+           value="{{ request.GET.search }}">
+</div>
+
+
+<div class="col-md-3">
+    <label class="form-label">Област</label>
+    <select name="district" class="form-select">
+        <option value="">Всички</option>
+        {% for key, label in districts %}
+            <option value="{{ key }}"
+                {% if request.GET.district == key %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="col-md-3">
+    <label class="form-label">Сортиране по локация</label>
+    <select name="sort" class="form-select">
+        <option value="name_asc" {% if request.GET.sort == "name_asc" %}selected{% endif %}>А - Я</option>
+        <option value="name_desc" {% if request.GET.sort == "name_desc" %}selected{% endif %}>Я - А</option>
+    </select>
+</div>
+
+<div class="col-12">
+    <button class="btn btn-primary">Посочи желаните филтри и сортировка и приложи</button>
+    <a href="?clear=1" class="btn btn-secondary">Изчисти филтър и сортировка</a>
+</div>
+
+</form>
+
+
 <h1>Локации</h1>
 
 
@@ -11,7 +64,7 @@
     {% for location in locations %}
         <li class="list-group-item">
             <a href="{% url 'location_detail' location.pk %}">
-                {{ location.name }} — {{ location.address }}
+                {{ location.name }} — {{ location.address }} — област {{ location.get_district_display }}
             </a>
         </li>
     {% empty %}

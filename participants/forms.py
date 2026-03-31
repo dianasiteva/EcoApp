@@ -1,74 +1,47 @@
 from django import forms
-
-from cities.models import Cities
 from .models import Participant, ParticipantEventRole
+
 
 
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = Participant
-        fields = ['first_name', 'last_name', 'contact_email', 'phone', 'city', 'car_registration_number', 'profile_picture']
+        # exclude = ("user",)
+
+        fields = [
+            'first_name', 'last_name', 'contact_email',
+            'phone', 'city', 'car_registration_number', 'profile_picture'
+        ]
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'district': forms.EmailInput(attrs={'class': 'form-control'}),
             'car_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
 
+
+            'city': forms.Select(attrs={'class': 'form-control'}),
         }
 
         labels = {
             'first_name': 'Име',
             'last_name': 'Фамилия',
             'contact_email': 'Електронна поща',
-            'phone': 'Телефонен номер',
+            'phone': 'Телефонен номер (по избор)',
             'city': 'Град',
-            # 'district': 'Област',
             'car_registration_number': 'Регистрационен номер на автомобил (по избор)',
-            'profile_picture': 'Профилна снимка/аватар'
+            'profile_picture': 'Профилна снимка/аватар (по избор)'
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['city'].queryset = Cities.objects.all().order_by('name')
 
 
+        self.fields['city'].label_from_instance = (
+            lambda obj: f"{obj.name} — {obj.get_district_display()}"
+        )
 
-class ParticipantUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Participant
-        fields = ['first_name', 'last_name', 'contact_email', 'city', 'car_registration_number', 'phone']
-
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'car_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-        labels = {
-            'first_name': '',
-            'last_name': '',
-            'contact_email': '',
-            'phone': 'Телефонен номер',
-            'city': 'Град',
-            'car_registration_number': 'Регистрационен номер на автомобил (по избор)',
-        }
-
-        error_messages = {
-            'car_registration_number': {
-                'invalid': 'Невалиден регистрационен номер на автомобил.',
-            }
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['city'].queryset = Cities.objects.all().order_by('name')
 
 
 

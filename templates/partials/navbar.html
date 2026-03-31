@@ -48,9 +48,11 @@
                     <li class="nav-item">
                         <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <button class="nav-link btn btn-link p-0 m-0" style="color: white;">
-                                Изход
-                            </button>
+                   <button class="nav-link btn btn-link text-white pt-2">
+                        Изход
+                    </button>
+
+
                         </form>
                     </li>
                     </ul>
@@ -66,13 +68,13 @@
                     </ul>
 
 
-                    <ul class="navbar-nav ms-auto"
+                    <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-link p-0 m-0" style="color: white;" href="{% url 'accounts:login' %}">Вход</a>
+                        <a class="nav-link btn btn-link p-2" style="color: white;" href="{% url 'accounts:login' %}">Вход</a>
                     </li>
                     </ul>
                 {% endif %}

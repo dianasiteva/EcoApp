@@ -34,7 +34,7 @@ class UserAdmin(UserAdmin):
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login",)}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
         (
@@ -46,7 +46,7 @@ class UserAdmin(UserAdmin):
         ),
     )
     list_display = ("email", "is_staff")
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups", "date_joined")
     search_fields = ("email",)
     ordering = ("email",)
 

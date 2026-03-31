@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
+from participants.choises import DistrictChoice
 from participants.models import ParticipantEventRole
 from .models import Event, Location
 from .forms import EventForm, LocationForm
@@ -11,7 +12,7 @@ def event_list(request):
     events = Event.objects.all()
     locations = Location.objects.all()
 
-    # --- ФИЛТРИ ---
+
     location_id = request.GET.get('location')
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
@@ -25,7 +26,7 @@ def event_list(request):
     if date_to:
         events = events.filter(date__lte=date_to)
 
-    # --- СОРТИРАНЕ ---
+
     sort = request.GET.get('sort')
 
     if sort == "date_asc":
@@ -89,17 +90,54 @@ def event_delete(request, pk):
         return redirect('event_list')
     return render(request, 'events/event_delete.html', {'event': event})
 
-
-# def location_list(request):
-#     locations = Location.objects.all()
-#     return render(request, 'events/location_list.html', {'locations': locations})
-
-
 class LocationListView(LoginRequiredMixin, ListView):
     model = Location
     template_name = 'events/location_list.html'
     context_object_name = 'locations'
     login_url = 'login'
+
+    def get_queryset(self):
+        qs = Location.objects.all()
+
+        location = self.request.GET.get("location")
+        district = self.request.GET.get("district")
+        sort = self.request.GET.get("sort")
+        search = self.request.GET.get("search")
+
+        if location:
+            qs = qs.filter(id=location)
+
+
+        if district:
+            qs = qs.filter(district=district)
+
+        if search:
+            qs = qs.filter(name__icontains=search)
+
+        if sort == "name_asc":
+            qs = qs.order_by("name")
+        elif sort == "name_desc":
+            qs = qs.order_by("-name")
+        else:
+            qs = qs.order_by("name")
+
+        return qs
+
+    def get(self, request, *args, **kwargs):
+        if "clear" in request.GET:
+            return redirect("location_list")
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["all_locations"] = Location.objects.all().order_by("name")
+        context["districts"] = DistrictChoice.choices
+
+        return context
+
+
+
 
 
 def location_detail(request, pk):

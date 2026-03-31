@@ -2,6 +2,7 @@ from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 
+from accounts.models import AppUser
 from cities.models import Cities
 from events.models import Event, Role
 from participants.validators import plate_validator, validate_image
@@ -21,6 +22,8 @@ class Participant(models.Model):
         null=True
     )
     appended_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -5,12 +5,14 @@
     <h3>Моят профил</h3>
     <hr>
 
-    <p><strong>Email:</strong> {{ user.email }}</p>
-{#    <p><strong>Име:</strong> {{ participant.user.first_name }}</p>#}
-{#    <p><strong>Фамилия:</strong> {{ participant.user.last_name }}</p>#}
-{#    <p><strong>Телефон:</strong> {{ participant.phone }}</p>#}
-{#    <p><strong>Град:</strong> {{ participant.city }}</p>#}
-{#    <p><strong>Област:</strong> {{ participant.city.district }}</p>#}
-{#    <p><strong>Рег. номер на МПС:</strong> {{ participant.car_registration_number }}</p>#}
+
+    <p><strong>Потребителско име:</strong> {{ user.email }}</p>
+    <p><strong>Дата на регистрация:</strong> {{ user.date_joined }}</p>
+    <p><strong>Последно влизане:</strong> {{ user.last_login }} </p>
+    {% if user.is_staff %}
+    <p><strong>Роля:</strong> Администратор</p>
+    {% else %}
+    <p><strong>Роля:</strong> Потребител</p>
+    {% endif %}
 </div>
 {% endblock %}

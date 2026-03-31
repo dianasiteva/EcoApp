@@ -1,14 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Count, Sum
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, DetailView, UpdateView
-
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView
 from accounts.forms import AppUserCreationForm
-# from accounts.models import Profile
-# from common.mixin import CheckUserIsOwner
+
 
 UserModel = get_user_model()
 
@@ -34,31 +31,3 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-
-
-# class ProfileEditView(LoginRequiredMixin, CheckUserIsOwner, UpdateView):
-#     model = Profile
-#     form_class = ProfileForm
-#     template_name = 'accounts/profile-edit-page.html'
-#
-#     def get_success_url(self) -> str:
-#         return reverse(
-#             'accounts:details',
-#             kwargs={
-#                 "pk": self.object.pk,
-#             }
-#         )
-#
-
-# def profile_delete(request: HttpRequest, pk: int) -> HttpResponse:
-#     user = UserModel.object.get(pk=pk)
-#
-#     if request.user.is_authenticated and request.user.pk == user.pk:
-#         if request.method == "POST":
-#             user.delete()
-#             return reverse("common:home")
-#     else:
-#         return HttpResponseForbidden()
-#
-#
-#     return render(request, 'accounts/profile-delete.html')
