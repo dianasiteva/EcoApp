@@ -1,21 +1,20 @@
 from django.urls import path
-from events import views
-from events.views import LocationListView
+from events.views import LocationListView, EventListView, EventDetailView, EventCreateView, EventUpdateView, \
+    EventDeleteView, LocationDetailView, LocationCreateView, LocationUpdateView, LocationDeleteView, \
+    RemoveAssignmentView
 
 urlpatterns = [
-    # Event URLs
-    path('', views.event_list, name='event_list'),
-    path('<int:pk>/', views.event_detail, name='event_detail'),
-    path('create/', views.event_create, name='event_create'),
-    path('<int:pk>/edit/', views.event_edit, name='event_edit'),
-    path('<int:pk>/delete/', views.event_delete, name='event_delete'),
-
-    # Location URLs
+    path('', EventListView.as_view(), name='event_list'),
+    path('<int:pk>/', EventDetailView.as_view(), name='event_detail'),
+    path('create/', EventCreateView.as_view(), name='event_create'),
+    path('<int:pk>/edit/', EventUpdateView.as_view(), name='event_edit'),
+    path('<int:pk>/delete/', EventDeleteView.as_view(), name='event_delete'),
     path('locations/', LocationListView.as_view(), name='location_list'),
-    path('locations/<int:pk>/', views.location_detail, name='location_detail'),
-    path('locations/create/', views.location_create, name='location_create'),
-    path('locations/<int:pk>/edit/', views.location_edit, name='location_edit'),
-    path('locations/<int:pk>/delete/', views.location_delete, name='location_delete'),
-    path('remove/<int:per_id>/', views.remove_assignment, name='remove_assignment'),
+    path('locations/<int:pk>/', LocationDetailView.as_view(), name='location_detail'),
+    path('locations/create/', LocationCreateView.as_view(), name='location_create'),
+    path('locations/<int:pk>/edit/', LocationUpdateView.as_view(), name='location_edit'),
+    path('locations/<int:pk>/delete/', LocationDeleteView.as_view(), name='location_delete'),
+
+    path('assignment/<int:per_id>/remove/', RemoveAssignmentView.as_view(), name='remove_assignment'),
 
 ]

@@ -29,6 +29,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ] + MY_APPS
 
+from django.contrib.messages import constants as messages
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -115,13 +120,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
@@ -167,6 +169,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 
-SESSION_COOKIE_AGE = 30 * 60  # 30 минути
+SESSION_COOKIE_AGE = 1800
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True

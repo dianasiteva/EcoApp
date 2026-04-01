@@ -18,11 +18,13 @@
     {% for per in event.participanteventrole_set.all %}
         <li class="list-group-item">
             
-            {% if event.date >= now %} 
-               <a href="{% url 'remove_assignment' per.pk %}"
-                  class="btn btn-sm btn-outline-danger me-2 p-1" title="Премахни">
-                  <i class="bi bi-x-lg"></i> </a>            
+            {% if event.date >= now and per.participant.user == request.user %}
+                <a href="{% url 'remove_assignment' per.pk %}"
+                   class="btn btn-sm btn-outline-danger me-2 p-1" title="Премахни">
+                   <i class="bi bi-x-lg"></i>
+                </a>
             {% endif %}
+
 
         {{ per.participant.first_name }} {{ per.participant.last_name }} — <strong>{{ per.role.name }}</strong>
             {{ per.information }}

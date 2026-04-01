@@ -1,5 +1,6 @@
 from django.db import models
 
+from accounts.models import AppUser
 from participants.choises import DistrictChoice
 
 
@@ -11,6 +12,8 @@ class Location(models.Model):
 
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='locations')
 
     def __str__(self):
         return self.name

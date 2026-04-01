@@ -18,7 +18,7 @@ class ParticipantForm(forms.ModelForm):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     form = ParticipantForm
-
+    readonly_fields = ('appended_at',)
     list_display = (
         "first_name",
         "last_name",

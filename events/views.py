@@ -1,100 +1,97 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView
-
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import ListView, DeleteView, DetailView, CreateView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from participants.choises import DistrictChoice
 from participants.models import ParticipantEventRole
 from .models import Event, Location
 from .forms import EventForm, LocationForm
 from django.utils import timezone
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-def event_list(request):
-    events = Event.objects.all()
-    locations = Location.objects.all()
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-    location_id = request.GET.get('location')
-    date_from = request.GET.get('date_from')
-    date_to = request.GET.get('date_to')
+class EventListView(ListView):
+    model = Event
+    template_name = 'events/event_list.html'
+    context_object_name = 'events'
+    ordering = ['-date']
 
-    if location_id and location_id != "":
-        events = events.filter(location_id=location_id)
+    def get_queryset(self):
+        qs = super().get_queryset()
 
-    if date_from:
-        events = events.filter(date__gte=date_from)
+        location_id = self.request.GET.get('location')
+        date_from = self.request.GET.get('date_from')
+        date_to = self.request.GET.get('date_to')
+        sort = self.request.GET.get('sort')
 
-    if date_to:
-        events = events.filter(date__lte=date_to)
+        if location_id:
+            qs = qs.filter(location_id=location_id)
 
+        if date_from:
+            qs = qs.filter(date__gte=date_from)
 
-    sort = request.GET.get('sort')
+        if date_to:
+            qs = qs.filter(date__lte=date_to)
 
-    if sort == "date_asc":
-        events = events.order_by('date')
-    elif sort == "date_desc":
-        events = events.order_by('-date')
-    else:
-        events = events.order_by('-date')  # default
+        if sort == "date_asc":
+            qs = qs.order_by('date')
+        elif sort == "date_desc":
+            qs = qs.order_by('-date')
 
-    return render(request, 'events/event_list.html', {
-        'events': events,
-        'locations': locations,
-    })
+        return qs
 
-
-def event_detail(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    now = timezone.now().date()
-
-    return render(request, 'events/event_detail.html', {
-        'event': event,
-        'now': now,
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locations'] = Location.objects.all()
+        return context
 
 
+class EventDetailView(LoginRequiredMixin, DetailView):
+    model = Event
+    template_name = 'events/event_detail.html'
+    context_object_name = 'event'
 
-def remove_assignment(request, per_id):
-    assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
-    event_id = assignment.event.pk
-    assignment.delete()
-    return redirect('event_detail', pk=event_id)
-
-
-def event_create(request):
-    if request.method == 'POST':
-        form = EventForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('event_list')
-    else:
-        form = EventForm()
-    return render(request, 'events/event_form.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now().date()
+        return context
 
 
-def event_edit(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            form.save()
-            return redirect('event_list')
-    else:
-        form = EventForm(instance=event)
-    return render(request, 'events/event_form.html', {'form': form})
+class EventCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'events.add_event'
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+    success_url = reverse_lazy('event_list')
+    success_message = "Събитието беше създадено успешно."
 
 
-def event_delete(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    if request.method == 'POST':
-        event.delete()
-        return redirect('event_list')
-    return render(request, 'events/event_delete.html', {'event': event})
+class EventUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'events.change_event'
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+    success_url = reverse_lazy('event_list')
+    success_message = "Събитието беше обновено успешно."
+
+
+class EventDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'events.delete_event'
+    model = Event
+    template_name = 'events/event_delete.html'
+    success_url = reverse_lazy('event_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Събитието беше изтрито успешно.")
+        return super().form_valid(form)
 
 class LocationListView(LoginRequiredMixin, ListView):
     model = Location
     template_name = 'events/location_list.html'
     context_object_name = 'locations'
-    login_url = 'login'
+    login_url = 'accounts:login'
 
     def get_queryset(self):
         qs = Location.objects.all()
@@ -137,43 +134,74 @@ class LocationListView(LoginRequiredMixin, ListView):
         return context
 
 
+class LocationDetailView(LoginRequiredMixin, DetailView):
+    model = Location
+    template_name = 'events/location_detail.html'
+    context_object_name = 'location'
 
 
+class LocationCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'events.add_location'
+    model = Location
+    form_class = LocationForm
+    template_name = 'events/location_form.html'
+    success_url = reverse_lazy('location_list')
+    success_message = "Локацията беше създадена успешно."
 
-def location_detail(request, pk):
-    location = get_object_or_404(Location, pk=pk)
-    return render(request, 'events/location_detail.html', {'location': location})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
-def location_create(request):
-    if request.method == 'POST':
-        form = LocationForm(request.POST)
-        if form.is_valid():
-            form.save()
+class LocationUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'events.change_location'
+    model = Location
+    form_class = LocationForm
+    template_name = 'events/location_form.html'
+    success_url = reverse_lazy('location_list')
+    success_message = "Локацията беше обновена успешно."
+
+    def get_queryset(self):
+        return Location.objects.filter(user=self.request.user)
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            messages.error(self.request, "Нямате право да редактирате тази локация.")
             return redirect('location_list')
-    else:
-        form = LocationForm()
-    return render(request, 'events/location_form.html', {'form': form})
+        return obj
 
 
-def location_edit(request, pk):
-    location = get_object_or_404(Location, pk=pk)
-    if request.method == 'POST':
-        form = LocationForm(request.POST, instance=location)
-        if form.is_valid():
-            form.save()
+class LocationDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'events.delete_location'
+    model = Location
+    template_name = 'events/location_delete.html'
+    success_url = reverse_lazy('location_list')
+
+    def get_queryset(self):
+        return Location.objects.filter(user=self.request.user)
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            messages.error(self.request, "Нямате право да изтриете тази локация.")
             return redirect('location_list')
-    else:
-        form = LocationForm(instance=location)
-    return render(request, 'events/location_form.html', {'form': form})
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, "Локацията беше изтрита успешно.")
+        return super().form_valid(form)
 
 
-def location_delete(request, pk):
-    location = get_object_or_404(Location, pk=pk)
-    if request.method == 'POST':
-        location.delete()
-        return redirect('location_list')
-    return render(request, 'events/location_delete.html', {'location': location})
+class RemoveAssignmentView(LoginRequiredMixin, View):
 
+    def post(self, request, per_id):
+        assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
 
+        # if assignment.participant.user != request.user:
+        #     messages.error(request, "Нямате право да премахвате този доброволец.")
+        #     return redirect('event_detail', pk=assignment.event.pk)
 
+        assignment.delete()
+        messages.success(request, "Доброволецът беше премахнат успешно.")
+        return redirect('event_detail', pk=assignment.event.pk)

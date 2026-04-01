@@ -19,6 +19,8 @@ class UserAdmin(UserAdmin):
     add_form = AppUserCreationForm
     change_password_form = AdminPasswordChangeForm
 
+    readonly_fields = ('last_login', 'date_joined')
+
     fieldsets = (
         (None, {"fields": ("password",)}),
         (_("Personal info"), {"fields": ("email",)}),
