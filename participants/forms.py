@@ -19,9 +19,9 @@ class ParticipantForm(forms.ModelForm):
             'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'car_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
-
-
             'city': forms.Select(attrs={'class': 'form-control'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+
         }
 
         labels = {

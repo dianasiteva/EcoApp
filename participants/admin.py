@@ -1,8 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-
 from .models import Participant
-
 from django import forms
 from .widgets import AdminImagePreviewWidget
 
@@ -29,7 +27,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         "car_registration_number",
         "phone",
         "appended_at",
-        "thumbnail"
+        "profile_picture"
     )
 
     list_filter = ("city", "appended_at")
@@ -44,9 +42,9 @@ class ParticipantAdmin(admin.ModelAdmin):
 
 
     ordering = ("-appended_at",)
-    readonly_fields = ("appended_at", "thumbnail")
+    readonly_fields = ("appended_at", "profile_picture")
 
-    def thumbnail(self, obj):
+    def profile_picture(self, obj):
         if obj.profile_picture:
             return format_html(
                 '<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />',
@@ -54,5 +52,5 @@ class ParticipantAdmin(admin.ModelAdmin):
             )
         return "—"
 
-    thumbnail.short_description = "Снимка"
+    profile_picture.short_description = "Снимка"
 
