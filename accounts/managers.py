@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
+# from django.contrib.auth.models import Group
 
 
 class AppUserManager(BaseUserManager):
@@ -96,3 +97,14 @@ class AppUserManager(BaseUserManager):
                 obj=obj,
             )
         return self.none()
+
+    # def create_user(self, email, password=None, **extra_fields):
+    #     user = self.model(email=email, **extra_fields)
+    #     user.set_password(password)
+    #     user.save(using=self._db)
+    #
+    #     group = Group.objects.get(name="Потребител")
+    #     user.groups.add(group)
+    #
+    #     return user
+    #

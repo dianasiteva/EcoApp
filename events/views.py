@@ -24,10 +24,18 @@ class EventListView(ListView):
         location_id = self.request.GET.get('location')
         date_from = self.request.GET.get('date_from')
         date_to = self.request.GET.get('date_to')
-        sort = self.request.GET.get('sort')
+        district = self.request.GET.get("district")
+        sort = self.request.GET.get("sort")
+        search = self.request.GET.get("search")
 
         if location_id:
             qs = qs.filter(location_id=location_id)
+
+        if search:
+            qs = qs.filter(title__icontains=search)
+
+        if district:
+            qs = qs.filter(location__district=district)
 
         if date_from:
             qs = qs.filter(date__gte=date_from)
@@ -45,6 +53,7 @@ class EventListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locations'] = Location.objects.all()
+        context['districts'] = DistrictChoice.choices
         return context
 
 
@@ -198,9 +207,9 @@ class RemoveAssignmentView(LoginRequiredMixin, View):
     def post(self, request, per_id):
         assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
 
-        # if assignment.participant.user != request.user:
-        #     messages.error(request, "Нямате право да премахвате този доброволец.")
-        #     return redirect('event_detail', pk=assignment.event.pk)
+        if assignment.participant.user != request.user:
+            messages.error(request, "Нямате право да премахвате този доброволец.")
+            return redirect('event_detail', pk=assignment.event.pk)
 
         assignment.delete()
         messages.success(request, "Доброволецът беше премахнат успешно.")

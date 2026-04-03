@@ -13,11 +13,11 @@ ALLOWED_HOSTS = ['*'] if DEBUG else ['your-domain.com']
 
 # Application definition
 MY_APPS = [
-    'events',
     'core',
     'participants',
-    'accounts',
     'cities',
+    'accounts.apps.AccountsConfig',
+    "events.apps.RolesConfig",
 ]
 
 INSTALLED_APPS = [

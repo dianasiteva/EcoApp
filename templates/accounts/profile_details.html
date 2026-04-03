@@ -9,10 +9,20 @@
     <p><strong>Потребителско име:</strong> {{ user.email }}</p>
     <p><strong>Дата на регистрация:</strong> {{ user.date_joined }}</p>
     <p><strong>Последно влизане:</strong> {{ user.last_login }} </p>
-    {% if user.is_staff %}
+ {% if user.is_staff %}
     <p><strong>Роля:</strong> Администратор</p>
-    {% else %}
-    <p><strong>Роля:</strong> Потребител</p>
+{% else %}
+    <p><strong>Роля:</strong> Регистриран потребител</p>
+
+    {% if user.groups.all %}
+        <p><strong>Групи:</strong>
+            {% for group in user.groups.all %}
+                {{ group.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Няма групи
+            {% endfor %}
+        </p>
     {% endif %}
+{% endif %}
 </div>
 {% endblock %}

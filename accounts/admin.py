@@ -47,12 +47,25 @@ class UserAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("email", "is_staff")
+    list_display = ("email", "get_groups", "is_staff", "is_superuser", "is_active","date_joined")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups", "date_joined")
     search_fields = ("email",)
     ordering = ("email",)
 
+    def get_groups(self, obj):
+        return ", ".join([g.name for g in obj.groups.all()])
+
+    get_groups.short_description = "Групи"
+
+
 
 @admin.register(Group)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
-    pass
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

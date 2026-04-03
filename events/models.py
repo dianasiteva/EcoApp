@@ -15,6 +15,10 @@ class Location(models.Model):
 
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='locations')
 
+    class Meta:
+        verbose_name = "Локация"
+        verbose_name_plural = "Локации"
+
     def __str__(self):
         return self.name
 
@@ -27,14 +31,23 @@ class Event(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Събитие"
+        verbose_name_plural = "Събития"
 
     def __str__(self):
         return f"{self.title} – {self.date}"
 
 
+
 class Role(models.Model):
-    name = models.CharField(max_length=20)  # Organizer, Volunteer, Sponsor, Logistician, etc.
+    name = models.CharField(max_length=20, unique=True)
     description = models.TextField(max_length=150,blank=True)
+
+    class Meta:
+        verbose_name = "Роля"
+        verbose_name_plural = "Роли"
 
     def __str__(self):
         return self.name
+

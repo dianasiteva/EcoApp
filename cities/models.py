@@ -16,5 +16,9 @@ class Cities(models.Model):
                                     'required': 'Моля въведете име на град или село.',
                                 })
 
+    class Meta:
+        verbose_name = "Град/Село"
+        verbose_name_plural = "Населени места"
+
     def __str__(self):
         return self.name + ' , ' + self.district

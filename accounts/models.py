@@ -25,5 +25,9 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     objects = AppUserManager()
 
+    class Meta:
+        verbose_name = "Регистриран потребител"
+        verbose_name_plural = "Потребители"
+
     def __str__(self) -> str:
         return self.email

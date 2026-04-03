@@ -5,7 +5,7 @@
     
 <form method="get" class="row g-3 mb-4">
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label class="form-label">Локация</label>
         <select name="location" class="form-select">
             <option value="">Всички</option>
@@ -17,19 +17,38 @@
         </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
+        <label class="form-label">Търси по име</label>
+        <input type="text" name="search" class="form-control"
+               value="{{ request.GET.search }}">
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Област</label>
+        <select name="district" class="form-select">
+            <option value="">Всички</option>
+            {% for key, label in districts %}
+                <option value="{{ key }}"
+                    {% if request.GET.district == key %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
         <label class="form-label">От дата</label>
         <input type="date" name="date_from" class="form-control"
                value="{{ request.GET.date_from }}">
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label class="form-label">До дата</label>
         <input type="date" name="date_to" class="form-control"
                value="{{ request.GET.date_to }}">
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label class="form-label">Сортиране по дата</label>
         <select name="sort" class="form-select">
             <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>Първо най-стари</option>
@@ -38,8 +57,8 @@
     </div>
 
     <div class="col-12">
-        <button class="btn btn-primary">Филтър</button>
-        <a href="/events/" class="btn btn-secondary">Изчисти филтър</a>
+        <button class="btn btn-primary">Приложи избраните филтри и сортиране</button>
+        <a href="/events/" class="btn btn-secondary">Изчисти филтри и сортиране</a>
     </div>
 
 </form>
@@ -53,7 +72,7 @@
     {% for event in events %}
         <li class="list-group-item">
             <a href="{% url 'event_detail' event.pk %}">
-                {{ event.title }} — {{ event.date }}
+                {{ event.title }} — {{ event.date }} — област {{ event.location.get_district_display }}
             </a>
         </li>
     {% empty %}

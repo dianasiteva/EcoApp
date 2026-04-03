@@ -11,14 +11,24 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description')
     ordering = ('-created_at',)
 
+
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'address')
     search_fields = ('name', 'address')
     ordering = ('name',)
 
+
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description')
-    search_fields = ('name',)
     ordering = ('name',)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

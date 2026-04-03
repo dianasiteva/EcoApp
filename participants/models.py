@@ -1,7 +1,6 @@
 from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
-
 from accounts.models import AppUser
 from cities.models import Cities
 from events.models import Event, Role
@@ -23,6 +22,10 @@ class Participant(models.Model):
     )
     appended_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Доброволец"
+        verbose_name_plural = "Доброволци"
 
 
     def save(self, *args, **kwargs):
@@ -54,6 +57,9 @@ class ParticipantEventRole(models.Model):
                 name='unique_participant_event_role'
             )
         ]
+
+        verbose_name = "Събитие, участник, роля"
+        verbose_name_plural = "Събития, участници, роли"
 
     def __str__(self):
         return f"{self.participant.first_name} {self.participant.last_name} → {self.event.title} ({self.role.name})"
