@@ -16,10 +16,10 @@ urlpatterns = [
     path('locations/<int:pk>/delete/', LocationDeleteView.as_view(), name='location_delete'),
     path('assignment/<int:per_id>/remove/', RemoveAssignmentView.as_view(), name='remove_assignment'),
     path('events/<int:pk>/report/', event_report, name='event_report'),
+    # path('assignment/<int:per_id>/make-organizer/', AssignOrganizerView.as_view(), name='assign_organizer'),
+    # path('assignment/<int:per_id>/remove-organizer/', RemoveOrganizerView.as_view(), name='remove_organizer'),
+    #
     path('assignment/<int:per_id>/make-organizer/', AssignOrganizerView.as_view(), name='assign_organizer'),
     path('assignment/<int:per_id>/remove-organizer/', RemoveOrganizerView.as_view(), name='remove_organizer'),
-
-
-
 
 ]

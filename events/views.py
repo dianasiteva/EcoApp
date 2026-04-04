@@ -1,4 +1,7 @@
+from django.contrib.messages import get_messages
+from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DeleteView, DetailView, CreateView, UpdateView
@@ -238,6 +241,39 @@ def event_report(request, pk):
     return redirect('event_list')
 
 # за назначаване на организатор
+# class AssignOrganizerView(LoginRequiredMixin, View):
+#
+#     def post(self, request, per_id):
+#         assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+#         event = assignment.event
+#         participant = assignment.participant
+#
+#         # само модератор може
+#         if not request.user.has_perm("events.edit_report"):
+#             messages.error(request, "Само модератор може да определя организатор.")
+#             return redirect('event_detail', pk=event.pk)
+#
+#         # дали вече е организатор
+#         organizer_role = Role.objects.get(name="Организатор")
+#
+#         if ParticipantEventRole.objects.filter(
+#             participant=participant,
+#             event=event,
+#             role=organizer_role
+#         ).exists():
+#             messages.warning(request, "Този доброволец вече е организатор.")
+#             return redirect('event_detail', pk=event.pk)
+#
+#         # нов запис
+#         ParticipantEventRole.objects.create(
+#             participant=participant,
+#             event=event,
+#             role=organizer_role
+#         )
+#
+#         messages.success(request, "Доброволецът е определен като организатор.")
+#         return redirect('event_detail', pk=event.pk)
+
 class AssignOrganizerView(LoginRequiredMixin, View):
 
     def post(self, request, per_id):
@@ -245,48 +281,59 @@ class AssignOrganizerView(LoginRequiredMixin, View):
         event = assignment.event
         participant = assignment.participant
 
-        # само модератор може
         if not request.user.has_perm("events.edit_report"):
-            messages.error(request, "Само модератор може да определя организатор.")
-            return redirect('event_detail', pk=event.pk)
+            return HttpResponseForbidden("Недостатъчни права")
 
-        # дали вече е организатор
         organizer_role = Role.objects.get(name="Организатор")
 
-        if ParticipantEventRole.objects.filter(
-            participant=participant,
-            event=event,
-            role=organizer_role
+        if not ParticipantEventRole.objects.filter(
+            participant=participant, event=event, role=organizer_role
         ).exists():
+            ParticipantEventRole.objects.create(
+                participant=participant,
+                event=event,
+                role=organizer_role
+            )
+        else:
             messages.warning(request, "Този доброволец вече е организатор.")
-            return redirect('event_detail', pk=event.pk)
-
-        # нов запис
-        ParticipantEventRole.objects.create(
-            participant=participant,
-            event=event,
-            role=organizer_role
-        )
-
-        messages.success(request, "Доброволецът е определен като организатор.")
-        return redirect('event_detail', pk=event.pk)
 
 
+
+        storage = get_messages(request)
+        list(storage)
+
+        html = render_to_string("events/partials/organizer_list.html", {"event": event}, request=request,)
+        return HttpResponse(html)
+
+# class RemoveOrganizerView(LoginRequiredMixin, View):
+#
+#     def post(self, request, per_id):
+#         assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+#
+#         # само модератор може
+#         if not request.user.has_perm("events.edit_report"):
+#             messages.error(request, "Нямате право да премахвате организатор.")
+#             return redirect('event_detail', pk=assignment.event.pk)
+#
+#         # дали е организатор
+#         if assignment.role.name != "Организатор":
+#             messages.error(request, "Може да се премахва само организатор.")
+#             return redirect('event_detail', pk=assignment.event.pk)
+#
+#         assignment.delete()
+#         messages.success(request, "Организаторът беше премахнат успешно.")
+#         return redirect('event_detail', pk=assignment.event.pk)
 class RemoveOrganizerView(LoginRequiredMixin, View):
 
     def post(self, request, per_id):
         assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+        event = assignment.event
 
-        # само модератор може
         if not request.user.has_perm("events.edit_report"):
-            messages.error(request, "Нямате право да премахвате организатор.")
-            return redirect('event_detail', pk=assignment.event.pk)
+            return HttpResponseForbidden("Недостатъчни права")
 
-        # дали е организатор
-        if assignment.role.name != "Организатор":
-            messages.error(request, "Може да се премахва само организатор.")
-            return redirect('event_detail', pk=assignment.event.pk)
+        if assignment.role.name == "Организатор":
+            assignment.delete()
 
-        assignment.delete()
-        messages.success(request, "Организаторът беше премахнат успешно.")
-        return redirect('event_detail', pk=assignment.event.pk)
+        html = render_to_string("events/partials/organizer_list.html", {"event": event})
+        return HttpResponse(html)

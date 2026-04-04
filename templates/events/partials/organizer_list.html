@@ -1,0 +1,85 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% for per in event.participanteventrole_set.all %}
+    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+        <div>
+            <strong> {{ per.participant.first_name }} {{ per.participant.last_name }}</strong><br>
+            <small class="text-muted"> {{ per.role.name }}</small>
+        </div>
+
+        <div class="d-flex gap-2">
+
+{#            Направи организатор #}
+            {% if per.role.name != "Организатор" %}
+            <button class="btn btn-sm btn-outline-primary assign-organizer-btn"
+                    data-id="{{ per.pk }}"
+                    data-event="{{ event.id }}">
+                Направи организатор
+            </button>
+            {% endif %}
+
+{#            Изтрий организатор #}
+            {% if per.role.name == "Организатор" %}
+            <button class="btn btn-sm btn-outline-danger remove-organizer-btn"
+                    data-id="{{ per.pk }}"
+                    data-event="{{ event.id }}">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            {% endif %}
+
+        </div>
+    </div>
+{% empty %}
+    <p class="text-muted">Няма доброволци към това събитие.</p>
+{% endfor %}
+
+
+<script>
+document.addEventListener("click", function(e) {
+
+    {#Добавяне на организатор#}
+    if (e.target.classList.contains("assign-organizer-btn")) {
+        let perId = e.target.dataset.id;
+        let eventId = e.target.dataset.event;
+
+        fetch(`/events/assignment/${perId}/make-organizer/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById(`organizer-list-${eventId}`).innerHTML = html;
+        });
+    }
+
+    {#Премахване на организатор#}
+    if (e.target.classList.contains("remove-organizer-btn") ||
+        e.target.closest(".remove-organizer-btn")) {
+
+        let btn = e.target.closest(".remove-organizer-btn");
+        let perId = btn.dataset.id;
+        let eventId = btn.dataset.event;
+
+        fetch(`/events/assignment/${perId}/remove-organizer/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById(`organizer-list-${eventId}`).innerHTML = html;
+        });
+    }
+
+});
+</script>
