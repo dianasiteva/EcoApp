@@ -4,7 +4,7 @@ from events.models import Event, Role
 from .choises import DistrictChoice
 from .forms import ParticipantEventRoleForm, ParticipantForm
 from django.shortcuts import render
-from .models import Participant
+from .models import Participant, ParticipantEventRole
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -140,11 +140,27 @@ def assign_role(request, event_id):
         form.fields['participant'].queryset = Participant.objects.filter(user=request.user)
 
         if form.is_valid():
+            participant = form.cleaned_data["participant"]
+            role = form.cleaned_data["role"]
+            # ако ролята е Организатор, а user НЕ е модератор
+            if role.name.lower() == "организатор" and not request.user.has_perm("events.edit_report"):
+                messages.error(request, "Само модератор може да добавя организатор към събитие.")
+                return redirect("assign_role", event_id=event.id)
+
             assignment = form.save(commit=False)
 
             if assignment.participant.user != request.user:
                 messages.error(request, "Не можете да включите участник, който не е ваш.")
                 return redirect('event_detail', pk=event_id)
+
+                # при дублиране
+            if ParticipantEventRole.objects.filter(
+                    participant=participant,
+                    event=event,
+                    role=role
+                    ).exists():
+                messages.error(request, "Този участник вече има тази роля в това събитие.")
+                return redirect("assign_role", event_id=event.id)
 
             assignment.event = event
             assignment.save()

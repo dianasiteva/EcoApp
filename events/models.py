@@ -30,10 +30,14 @@ class Event(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    report = models.TextField(blank=True,null=True)
 
     class Meta:
         verbose_name = "Събитие"
         verbose_name_plural = "Събития"
+        permissions = [
+            ("edit_report", "Може да редактира отчет"),
+        ]
 
     def __str__(self):
         return f"{self.title} – {self.date}"

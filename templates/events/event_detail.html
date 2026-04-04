@@ -13,16 +13,23 @@
 {% endif %}
 
 <h3 class="mt-4">Доброволци</h3>
+    <p class="fancy mb-5">
+    Включването на доброволци в събитията е от съществено значение за успеха на нашата мисия.
+    Доброволците не само помагат с физическата работа по почистването, но и създават общност от хора,
+    които споделят еднакви ценности и стремеж към по-чиста и по-зелена България. При обособяване на група модераторът определя организатор.
+    </p>
 
 <ul class="list-group">
     {% for per in event.participanteventrole_set.all %}
         <li class="list-group-item">
             
             {% if event.date >= now and per.participant.user == request.user %}
-                <a href="{% url 'remove_assignment' per.pk %}"
-                   class="btn btn-sm btn-outline-danger me-2 p-1" title="Премахни">
-                   <i class="bi bi-x-lg"></i>
-                </a>
+                <form method="post" action="{% url 'remove_assignment' per.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger me-2 p-1" title="Премахни">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </form>
             {% endif %}
 
 

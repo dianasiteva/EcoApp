@@ -6,10 +6,12 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from participants.choises import DistrictChoice
 from participants.models import ParticipantEventRole
-from .models import Event, Location
+from .models import Event, Location, Role
 from .forms import EventForm, LocationForm
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import ExpressionWrapper, F, fields
+from django.utils.timezone import now
 
 
 class EventListView(ListView):
@@ -20,6 +22,13 @@ class EventListView(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
+
+        qs = qs.annotate(
+            days_since=ExpressionWrapper(
+                now().date() - F('date'),
+                output_field=fields.DurationField()
+            )
+        )
 
         location_id = self.request.GET.get('location')
         date_from = self.request.GET.get('date_from')
@@ -54,6 +63,7 @@ class EventListView(ListView):
         context = super().get_context_data(**kwargs)
         context['locations'] = Location.objects.all()
         context['districts'] = DistrictChoice.choices
+        context['now'] = timezone.now().date()
         return context
 
 
@@ -213,4 +223,70 @@ class RemoveAssignmentView(LoginRequiredMixin, View):
 
         assignment.delete()
         messages.success(request, "Доброволецът беше премахнат успешно.")
+        return redirect('event_detail', pk=assignment.event.pk)
+
+
+ # за резултати
+
+from django.contrib.auth.decorators import permission_required
+
+@permission_required('events.edit_report', raise_exception=True)
+def event_report(request, pk):
+    event = Event.objects.get(pk=pk)
+    event.report = request.POST.get("report")
+    event.save()
+    return redirect('event_list')
+
+# за назначаване на организатор
+class AssignOrganizerView(LoginRequiredMixin, View):
+
+    def post(self, request, per_id):
+        assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+        event = assignment.event
+        participant = assignment.participant
+
+        # само модератор може
+        if not request.user.has_perm("events.edit_report"):
+            messages.error(request, "Само модератор може да определя организатор.")
+            return redirect('event_detail', pk=event.pk)
+
+        # дали вече е организатор
+        organizer_role = Role.objects.get(name="Организатор")
+
+        if ParticipantEventRole.objects.filter(
+            participant=participant,
+            event=event,
+            role=organizer_role
+        ).exists():
+            messages.warning(request, "Този доброволец вече е организатор.")
+            return redirect('event_detail', pk=event.pk)
+
+        # нов запис
+        ParticipantEventRole.objects.create(
+            participant=participant,
+            event=event,
+            role=organizer_role
+        )
+
+        messages.success(request, "Доброволецът е определен като организатор.")
+        return redirect('event_detail', pk=event.pk)
+
+
+class RemoveOrganizerView(LoginRequiredMixin, View):
+
+    def post(self, request, per_id):
+        assignment = get_object_or_404(ParticipantEventRole, pk=per_id)
+
+        # само модератор може
+        if not request.user.has_perm("events.edit_report"):
+            messages.error(request, "Нямате право да премахвате организатор.")
+            return redirect('event_detail', pk=assignment.event.pk)
+
+        # дали е организатор
+        if assignment.role.name != "Организатор":
+            messages.error(request, "Може да се премахва само организатор.")
+            return redirect('event_detail', pk=assignment.event.pk)
+
+        assignment.delete()
+        messages.success(request, "Организаторът беше премахнат успешно.")
         return redirect('event_detail', pk=assignment.event.pk)

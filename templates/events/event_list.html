@@ -68,15 +68,143 @@
  {% if user.is_authenticated %}
 <a href="{% url 'event_create' %}" class="btn btn-success mb-3">Открий събитие</a>
  {% endif %}
-<ul class="list-group">
+
+    <ul class="list-group">
     {% for event in events %}
-        <li class="list-group-item">
-            <a href="{% url 'event_detail' event.pk %}">
-                {{ event.title }} — {{ event.date }} — област {{ event.location.get_district_display }}
-            </a>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+                <a href="{% url 'event_detail' event.pk %}">
+                    {{ event.title }} — {{ event.date }} — област {{ event.location.get_district_display }}
+                </a>
+            </div>
+
+            <div>
+                 {% with days=event.days_since.days %}
+
+                    {% if days > 7 %}
+                        <button class="btn btn-success btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#resultsModal{{ event.id }}">
+                            Резултати
+                        </button>
+
+                    {% elif days >= 0 and days <= 7 %}
+                        {% if perms.events.edit_report %}
+                            <button class="btn btn-warning btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reportModal{{ event.id }}">
+                                Отчет
+                            </button>
+                        {% endif %}
+
+                    {% elif event.date >= now %}
+                        {% if perms.events.edit_report %}
+                        <button class="btn btn-info btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#assignOrganizerModal{{ event.id }}">
+                            Определи организатор
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
         </li>
+
+{#        Резултати#}
+        <div class="modal fade" id="resultsModal{{ event.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Резултати за {{ event.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <textarea class="form-control" rows="6" readonly>{{ event.report }}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{#        Отчет#}
+        <div class="modal fade" id="reportModal{{ event.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="{% url 'event_report' event.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title">Отчет за {{ event.title }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <textarea name="report" class="form-control" rows="6">{{ event.report }}</textarea>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary">Запази</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+{#        Определи организатор#}
+         <div class="modal fade" id="assignOrganizerModal{{ event.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title">Определи организатор за {{ event.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                {% for per in event.participanteventrole_set.all %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                        <div>
+                            <strong>{{ per.participant.first_name }} {{ per.participant.last_name }}</strong><br>
+                            <small class="text-muted">{{ per.role.name }}</small>
+                        </div>
+
+                        <div class="d-flex gap-2">
+
+                            {# Направи организатор #}
+                            {% if per.role.name != "Организатор" %}
+                            <form method="post" action="{% url 'assign_organizer' per.pk %}">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-primary">
+                                    Направи организатор
+                                </button>
+                            </form>
+                            {% endif %}
+
+                            {# Изтрий (само ако е организатор) #}
+                            {% if per.role.name == "Организатор" %}
+                            <form method="post" action="{% url 'remove_organizer' per.pk %}">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger" title="Премахни организатор">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Няма доброволци към това събитие.</p>
+                {% endfor %}
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
     {% empty %}
         <li class="list-group-item">Няма събития.</li>
     {% endfor %}
 </ul>
+
+
 {% endblock %}

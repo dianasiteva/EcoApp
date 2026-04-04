@@ -30,7 +30,7 @@
 <a href="{% url 'participant_edit' participant.pk %}" class="btn btn-primary">Корекция</a>
 <a href="{% url 'participant_delete' participant.pk %}" class="btn btn-danger">Изтриване</a>
 
-<h3 class="mt-4">Участвал в събитията:</h3>
+<h3 class="mt-4">Участник в събитията:</h3>
 
 <ul class="list-group">
     {% for per in participant.participanteventrole_set.all %}

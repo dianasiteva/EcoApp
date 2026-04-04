@@ -28,6 +28,12 @@ class AccountsConfig(AppConfig):
 
         MODELS = [Cities, Event, Participant, Location, Role, ParticipantEventRole]
 
+        # custom permission
+        try:
+            edit_report_perm = Permission.objects.get(codename="edit_report")
+        except Permission.DoesNotExist:
+            edit_report_perm = None
+
         # view permission for all models
 
         for model in MODELS:
@@ -62,6 +68,8 @@ class AccountsConfig(AppConfig):
 
             if model.__name__ == "Event":
                 moderator_group.permissions.add(change_perm, delete_perm, add_perm,)
+                if edit_report_perm:
+                    moderator_group.permissions.add(edit_report_perm)
 
             if model.__name__ == "Cities":
                 moderator_group.permissions.add(change_perm, delete_perm, add_perm,)
