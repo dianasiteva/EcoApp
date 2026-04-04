@@ -1,3 +1,19 @@
 <footer class="text-center mt-5 mb-3 text-muted">
-    EcoApp © 2026 — Платформа за доброволен труд за почистване на пътищата на България
+    <div>
+        EcoApp © 2026 — Платформа за доброволен труд за почистване на пътищата на България
+    </div>
+
+    <div class="mt-2">
+        <a href="mailto:{{ EMAIL_HOST_USER }}" class="text-decoration-none text-muted">
+            📧 Контакт: {{ EMAIL_HOST_USER }}
+        </a>
+    </div>
+
+    {% if request.user.is_staff %}
+    <div class="mt-2">
+        <a href="/admin/" class="text-decoration-none fw-semibold">
+            ⚙️ Админ панел
+        </a>
+    </div>
+    {% endif %}
 </footer>
