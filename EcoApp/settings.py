@@ -8,8 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
-DEBUG = os.getenv("DEBUG") == "True"
-ALLOWED_HOSTS = ['*'] if DEBUG else ['your-domain.com']
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = ['*'] if DEBUG else ['your-domain.com', 'your-public-ip']
 
 # Application definition
 MY_APPS = [
