@@ -17,10 +17,11 @@ MY_APPS = [
     'participants',
     'cities',
     'accounts.apps.AccountsConfig',
-    "events.apps.RolesConfig",
+    "events.apps.EventsConfig",
 ]
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,6 +29,37 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ] + MY_APPS
+
+JAZZMIN_SETTINGS = {
+    "site_title": "EcoApp Admin",
+    "site_header": "EcoApp Administration",
+    "welcome_sign": "Добре дошла, Диана",
+    "site_brand": "EcoApp",
+
+    "theme": "flatly",  # светла, синкава, елегантна тема
+    "dark_mode_theme": "darkly",
+
+    "custom_css": None,
+    "custom_js": None,
+
+    "show_ui_builder": True,
+
+    "navigation_expanded": True,
+
+    "topmenu_links": [
+        {"name": "Начало", "url": "admin:index", "permissions": ["auth.view_user"]},
+    ],
+
+    "usermenu_links": [
+        {"name": "Документация", "url": "https://docs.djangoproject.com/"},
+    ],
+
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {"auth.user": "collapsible"},
+}
+
+
+
 
 from django.contrib.messages import constants as messages
 

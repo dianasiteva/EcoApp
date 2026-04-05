@@ -1,13 +1,12 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
+
 from cities.models import Cities
 from events.models import Event, Location, Role
 from participants.models import Participant, ParticipantEventRole
-
 
 User = get_user_model()
 
@@ -17,8 +16,6 @@ def add_user_to_default_group(sender, instance, created, **kwargs):
     if created and not instance.is_superuser:
         group, _ = Group.objects.get_or_create(name="Потребител")
         instance.groups.add(group)
-
-
 
 
 @receiver(post_migrate)
@@ -42,46 +39,40 @@ def create_groups_and_permissions(sender, **kwargs):
     for model in MODELS:
         ct = ContentType.objects.get_for_model(model)
 
-        view_perm = Permission.objects.get(
-            codename=f"view_{model._meta.model_name}",
-            content_type=ct
-        )
-        add_perm = Permission.objects.get(
-            codename=f"add_{model._meta.model_name}",
-            content_type=ct
-        )
-        change_perm = Permission.objects.get(
-            codename=f"change_{model._meta.model_name}",
-            content_type=ct
-        )
-        delete_perm = Permission.objects.get(
-            codename=f"delete_{model._meta.model_name}",
-            content_type=ct
-        )
+        # Опитваме да вземем permissions безопасно
+        perms = {}
+        for action in ["view", "add", "change", "delete"]:
+            codename = f"{action}_{model._meta.model_name}"
+            try:
+                perms[action] = Permission.objects.get(codename=codename, content_type=ct)
+            except Permission.DoesNotExist:
+                # Permissions още не са създадени → пропускаме този модел
+                return
 
-        # Модератор
-        moderator_group.permissions.add(view_perm)
+        # Права за всички
+        moderator_group.permissions.add(perms["view"])
+        user_group.permissions.add(perms["view"])
 
-        # Потребител
-        user_group.permissions.add(view_perm)
+        # Специални правила
+        name = model.__name__
 
-        if model.__name__ == "Event":
-            moderator_group.permissions.add(change_perm, delete_perm, add_perm)
+        if name == "Event":
+            moderator_group.permissions.add(perms["add"], perms["change"], perms["delete"])
             if edit_report_perm:
                 moderator_group.permissions.add(edit_report_perm)
 
-        if model.__name__ == "Cities":
-            moderator_group.permissions.add(change_perm, delete_perm, add_perm)
-            user_group.permissions.add(add_perm)
+        if name == "Cities":
+            moderator_group.permissions.add(perms["add"], perms["change"], perms["delete"])
+            user_group.permissions.add(perms["add"])
 
-        if model.__name__ == "Location":
-            moderator_group.permissions.add(change_perm, delete_perm, add_perm)
-            user_group.permissions.add(add_perm, change_perm, delete_perm)
+        if name == "Location":
+            moderator_group.permissions.add(perms["add"], perms["change"], perms["delete"])
+            user_group.permissions.add(perms["add"], perms["change"], perms["delete"])
 
-        if model.__name__ == "Participant":
-            moderator_group.permissions.add(change_perm, delete_perm, add_perm)
-            user_group.permissions.add(add_perm, change_perm, delete_perm)
+        if name == "Participant":
+            moderator_group.permissions.add(perms["add"], perms["change"], perms["delete"])
+            user_group.permissions.add(perms["add"], perms["change"], perms["delete"])
 
-        if model.__name__ == "ParticipantEventRole":
-            moderator_group.permissions.add(change_perm, delete_perm, add_perm)
-            user_group.permissions.add(add_perm, change_perm, delete_perm)
+        if name == "ParticipantEventRole":
+            moderator_group.permissions.add(perms["add"], perms["change"], perms["delete"])
+            user_group.permissions.add(perms["add"], perms["change"], perms["delete"])
