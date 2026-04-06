@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['*'] if DEBUG else ['your-domain.com', 'your-public-ip']
+ALLOWED_HOSTS = ['*'] if DEBUG else ['localhost', '127.0.0.1', '.elasticbeanstalk.com']
 
 # Application definition
 MY_APPS = [
@@ -170,25 +170,45 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'accounts.AppUser'
-
-# PRODUCTION SECURITY
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = "DENY"
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+
+    # ❗ Оставяме HTTP, затова:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+    # ❗ Няма HTTPS → няма HSTS
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+
+    # ❗ CSRF_TRUSTED_ORIGINS трябва да е HTTP, не HTTPS
     CSRF_TRUSTED_ORIGINS = [
-        'https://your-domain.com',
-        'https://www.your-domain.com',
+        'http://localhost',
+        'http://127.0.0.1',
+        'http://*.elasticbeanstalk.com',
     ]
 
-    # Optional but recommended:
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
+# # PRODUCTION SECURITY
+# if not DEBUG:
+#     SECURE_BROWSER_XSS_FILTER = True
+#     SECURE_CONTENT_TYPE_NOSNIFF = True
+#     X_FRAME_OPTIONS = "DENY"
+#     SECURE_SSL_REDIRECT = True
+#     SESSION_COOKIE_SECURE = True
+#     CSRF_COOKIE_SECURE = True
+#     CSRF_TRUSTED_ORIGINS = [
+#         'https://your-domain.com',
+#         'https://www.your-domain.com',
+#     ]
+#
+#     # Optional but recommended:
+#     SECURE_HSTS_SECONDS = 31536000
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
+#
 # FRAME PROTECTION
 X_FRAME_OPTIONS = 'DENY'
 
